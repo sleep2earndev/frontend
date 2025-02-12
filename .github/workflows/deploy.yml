@@ -66,5 +66,5 @@ jobs:
               docker restart frontend
             else
               cd /deploy/snoorefi/frontend/deploy
-              docker compose up -d
+              docker-compose up -d
             fi
