@@ -65,5 +65,5 @@ jobs:
             if [ "$(docker ps -q -f name=frontend)" ]; then
               docker restart frontend
             else
-              docker compose -f /deploy/snoorefi/frontend/docker-compose.yml up -d
+              docker compose up -d
             fi
