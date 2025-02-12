@@ -61,10 +61,3 @@ jobs:
             cd /deploy/snoorefi/frontend
             tar -xzvf dist.tar.gz
             rm dist.tar.gz
-
-            if [ "$(docker ps -q -f name=frontend)" ]; then
-              docker restart frontend
-            else
-              cd /deploy/snoorefi/frontend/deploy
-              docker-compose up -d
-            fi
