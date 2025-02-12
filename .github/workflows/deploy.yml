@@ -33,7 +33,7 @@ jobs:
       - name: Compress Build Folder
         run: tar -czvf dist.tar.gz -C dist .
 
-      - name: Deploy to VPS
+      - name: Move Build Folder to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -42,7 +42,16 @@ jobs:
           source: "dist.tar.gz"
           target: "/deploy/snoorefi/frontend"
 
-      - name: Extract Build on VPS
+      - name: Deploy Docker Compose to VPS
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: "/deploy/docker-compose.yml"
+          target: "/deploy/snoorefi/frontend"
+
+      - name: Extract & Restart on VPS
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -52,3 +61,9 @@ jobs:
             cd /deploy/snoorefi/frontend
             tar -xzvf dist.tar.gz
             rm dist.tar.gz
+
+            if [ "$(docker ps -q -f name=frontend)" ]; then
+              docker restart frontend
+            else
+              docker compose -f /deploy/snoorefi/frontend/docker-compose.yml up -d
+            fi
