@@ -48,7 +48,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
-          source: "/deploy/docker-compose.yml"
+          source: "deploy/docker-compose.yml"
           target: "/deploy/snoorefi/frontend"
 
       - name: Extract & Restart on VPS
