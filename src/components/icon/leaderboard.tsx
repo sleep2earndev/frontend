@@ -1,6 +1,5 @@
-import React from "react";
-
-export default function IconLeaderboard(props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function IconLeaderboard(props: any) {
   return (
     <svg
       width="24"

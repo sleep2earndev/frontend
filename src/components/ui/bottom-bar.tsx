@@ -43,8 +43,16 @@ export default function BottomBar({ data }: BottomBarProps) {
     </motion.div>
   );
 }
-
-const Tab = ({ children, setPosition, isActive }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Tab = ({
+  children,
+  setPosition,
+  isActive,
+}: {
+  children: React.ReactNode;
+  setPosition: (data: any) => void;
+  isActive: boolean;
+}) => {
   const ref = useRef<HTMLLIElement>(null);
 
   function setActive() {
@@ -75,8 +83,8 @@ const Tab = ({ children, setPosition, isActive }) => {
     </li>
   );
 };
-
-const Cursor = ({ position }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Cursor = ({ position }: { position: any }) => {
   return (
     <motion.li
       animate={{

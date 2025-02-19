@@ -1,6 +1,5 @@
-import React from "react";
-
-export default function IconWallet(props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function IconWallet(props: any) {
   return (
     <svg
       width="24"

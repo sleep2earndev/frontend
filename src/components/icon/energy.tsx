@@ -1,4 +1,5 @@
-export default function IconEnergy(props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function IconEnergy(props: any) {
   return (
     <svg
       width="24"
