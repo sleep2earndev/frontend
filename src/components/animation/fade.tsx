@@ -1,6 +1,7 @@
 import * as motion from "motion/react-client";
 
-export default function FadeWrapper({ children, ...props }: { children: React.ReactNode }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function FadeWrapper({ children, ...props }: { children: React.ReactNode, [key: string]: any }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
