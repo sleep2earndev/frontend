@@ -52,6 +52,9 @@ export default {
         },
       },
     },
+    container: {
+      center: true,
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };

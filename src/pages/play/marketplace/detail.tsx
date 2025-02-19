@@ -1,7 +1,8 @@
+import FadeWrapper from '@/components/animation/fade'
 import React from 'react'
 
 export default function MarketplaceDetailPage() {
   return (
-    <div>MarketplaceDetailPage</div>
+    <FadeWrapper>MarketplaceDetailPage</FadeWrapper>
   )
 }

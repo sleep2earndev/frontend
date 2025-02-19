@@ -68,7 +68,7 @@ const Tab = ({ children, setPosition, isActive }) => {
   return (
     <li
       ref={ref}
-      onMouseEnter={setActive}
+      // onMouseEnter={setActive}
       className="relative z-10 block cursor-pointer uppercase text-white mix-blend-difference px-5 py-3 text-base"
     >
       {children}

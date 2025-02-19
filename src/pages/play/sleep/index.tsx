@@ -1,7 +1,8 @@
+import FadeWrapper from '@/components/animation/fade'
 import React from 'react'
 
 export default function SleepPage() {
   return (
-    <div>SleepPage</div>
+    <FadeWrapper>SleepPage</FadeWrapper>
   )
 }

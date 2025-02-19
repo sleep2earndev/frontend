@@ -4,10 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { NavLink } from "react-router";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import FadeWrapper from "@/components/animation/fade";
 
 export default function HomePage() {
   return (
-    <div className="p-4">
+    <FadeWrapper className="p-4">
       <Card>
         <CardContent>
           <div className="pt-6">
@@ -33,6 +34,6 @@ export default function HomePage() {
       <div className="mt-6 flex justify-center">
         <Button className="text-white">START</Button>
       </div>
-    </div>
+    </FadeWrapper>
   );
 }
