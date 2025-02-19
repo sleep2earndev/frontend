@@ -23,6 +23,7 @@ const navbar = [
 ];
 
 export default function PlayLayout() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [bottomBarVisible, setBottomBarVisible] = useState(true);
 
   return (

@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import IconMarketplace from "../icon/marketplace";
 import IconWallet from "../icon/wallet";
 import { NavLink } from "react-router";
 

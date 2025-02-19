@@ -1,4 +1,5 @@
-export default function IconPowerNap(props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function IconPowerNap(props:any) {
   return (
     <svg
       width="24"
