@@ -9,3 +9,29 @@
     @apply flex flex-col flex-1;
   }
 }
+
+.nft-card {
+  padding: 1.5rem;
+  box-shadow: 5px 5px 0 white;
+  font-family: "Arial", sans-serif;
+  @apply border-4 border-white;
+  @apply bg-secondary;
+  @apply transition-all;
+  @apply rounded-xl;
+  @apply flex flex-col gap-4;
+}
+
+.nft-card:hover,
+.nft-card:active {
+  box-shadow: 0 0 0 white;
+}
+
+.custom-box-shadow {
+  box-shadow: 3px 3px 0 white;
+  @apply transition-all;
+}
+
+.custom-box-shadow:hover,
+.custom-box-shadow:active {
+  box-shadow: 0 0 0 white;
+}
