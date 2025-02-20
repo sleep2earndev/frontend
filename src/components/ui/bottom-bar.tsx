@@ -25,9 +25,9 @@ export default function BottomBar({ data }: BottomBarProps) {
       initial={{ y: "200%", opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      exit={{ y: "200%", opacity: 0, transition: { duration: 0.1 } }}
+      exit={{ y: "200%", opacity: 0, transition: { duration: 0.5 } }}
     >
-      <ul className="relative mx-auto flex w-fit rounded-full bg-[#111729] p-1">
+      <ul className="relative mx-auto flex w-fit rounded-full bg-secondary p-1 border border-white">
         {data.map((item, index) => (
           <NavLink to={item.to} key={index}>
             {({ isActive }) => (
@@ -43,7 +43,7 @@ export default function BottomBar({ data }: BottomBarProps) {
     </motion.div>
   );
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const Tab = ({
   children,
   setPosition,
