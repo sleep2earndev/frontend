@@ -1,11 +1,12 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import BottomBar from "@/components/ui/bottom-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import IconHome from "@/components/icon/home";
 import IconLeaderboard from "@/components/icon/leaderboard";
 import IconMarketplace from "@/components/icon/marketplace";
-import ProfileBar from "../ui/profile-bar";
+import ProfileBar from "@/components/ui/profile-bar";
+import BackBar from "@/components/ui/back-bar";
 
 const navbar = [
   {
@@ -23,13 +24,28 @@ const navbar = [
 ];
 
 export default function PlayLayout() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [bottomBarVisible] = useState(true);
+  const [bottomBarVisible, setBottomBarVisible] = useState(true);
+  const [profileHeaderVisible, setProfileHeaderVisible] = useState(true);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location.pathname)
+    if (location.pathname.startsWith('/play/sleep')) {
+      setBottomBarVisible(false)
+      setProfileHeaderVisible(false)
+    } else {
+      setBottomBarVisible(true)
+      setProfileHeaderVisible(true)
+    }
+  }, [location.pathname])
 
   return (
     <div className="play-layout">
       <div className="play-layout__container">
-        <ProfileBar/>
+        <AnimatePresence>
+          {profileHeaderVisible ? <ProfileBar /> : <BackBar />}
+        </AnimatePresence>
         <Outlet />
         <AnimatePresence>
           {bottomBarVisible && <BottomBar data={navbar} />}

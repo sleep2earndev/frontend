@@ -1,15 +1,16 @@
 import IconEnergy from "@/components/icon/energy";
 import IconPlus from "@/components/icon/plus";
 import { Card, CardContent } from "@/components/ui/card";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import FadeWrapper from "@/components/animation/fade";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <FadeWrapper className="p-4">
-      <Card>
+      <Card className="border-2 border-white">
         <CardContent>
           <div className="pt-6">
             <NavLink
@@ -32,7 +33,9 @@ export default function HomePage() {
         </div>
       </div>
       <div className="mt-6 flex justify-center">
-        <Button className="text-white">START</Button>
+        <Button className="text-white" onClick={() => {
+          navigate('/play/sleep')
+        }}>START</Button>
       </div>
     </FadeWrapper>
   );
