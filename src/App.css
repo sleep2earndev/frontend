@@ -6,5 +6,6 @@
   .play-layout__container {
     @apply mx-auto;
     @apply max-w-[450px] w-full;
+    @apply flex flex-col flex-1;
   }
 }
