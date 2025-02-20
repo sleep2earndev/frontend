@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as motion from "motion/react-client";
 import { cn } from "@/lib/utils";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 
 interface BottomBarData {
   title: string | React.ReactNode;
   to: string;
+  key: string;
 }
 
 interface BottomBarProps {
@@ -18,6 +19,7 @@ export default function BottomBar({ data }: BottomBarProps) {
     width: 0,
     opacity: 0,
   });
+  const { pathname } = useLocation();
 
   return (
     <motion.div
@@ -30,11 +32,9 @@ export default function BottomBar({ data }: BottomBarProps) {
       <ul className="relative mx-auto flex w-fit rounded-full bg-secondary p-1 border border-white">
         {data.map((item, index) => (
           <NavLink to={item.to} key={index}>
-            {({ isActive }) => (
-              <Tab setPosition={setPosition} isActive={isActive}>
+            <Tab key={item.key} setPosition={setPosition} isActive={item.to === pathname}>
                 {item.title}
               </Tab>
-            )}
           </NavLink>
         ))}
 
@@ -48,8 +48,11 @@ const Tab = ({
   children,
   setPosition,
   isActive,
+  activeTab,
+  identifier,
 }: {
   children: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPosition: (data: any) => void;
   isActive: boolean;
 }) => {
@@ -90,7 +93,7 @@ const Cursor = ({ position }: { position: any }) => {
       animate={{
         ...position,
       }}
-      className="absolute z-0 h-12 rounded-full bg-black"
+      className="absolute z-0 h-12 rounded-full bg-white"
     />
   );
 };

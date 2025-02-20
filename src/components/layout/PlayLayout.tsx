@@ -12,14 +12,17 @@ const navbar = [
   {
     title: <IconHome />,
     to: "/play",
+    key: 'home'
   },
   {
     title: <IconLeaderboard />,
     to: "/play/competition/leaderboard",
+    key: 'leaderboard'
   },
   {
     title: <IconMarketplace />,
     to: "/play/marketplace",
+    key: 'marketplace'
   },
 ];
 
