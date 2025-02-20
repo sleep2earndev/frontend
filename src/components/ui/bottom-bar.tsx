@@ -48,8 +48,6 @@ const Tab = ({
   children,
   setPosition,
   isActive,
-  activeTab,
-  identifier,
 }: {
   children: React.ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
