@@ -5,9 +5,19 @@ import { NavLink, useNavigate } from "react-router";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import FadeWrapper from "@/components/animation/fade";
+import { useQuery } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
+import { fetchNFTs } from "@/api/nft";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { address } = useAccount();
+
+  const { data } = useQuery({
+    queryKey: ["nfts-user", address],
+    queryFn: () => fetchNFTs(address as string),
+  });
+
   return (
     <FadeWrapper className="p-4">
       <Card className="border-2 border-white">
@@ -24,6 +34,7 @@ export default function HomePage() {
           </div>
         </CardContent>
       </Card>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
       <div className="mt-6 flex flex-col gap-4">
         <div className="flex gap-2 items-center">
           <IconEnergy />
@@ -33,9 +44,14 @@ export default function HomePage() {
         </div>
       </div>
       <div className="mt-6 flex justify-center">
-        <Button className="text-white" onClick={() => {
-          navigate('/play/sleep')
-        }}>START</Button>
+        <Button
+          className="text-white"
+          onClick={() => {
+            navigate("/play/sleep");
+          }}
+        >
+          START
+        </Button>
       </div>
     </FadeWrapper>
   );
