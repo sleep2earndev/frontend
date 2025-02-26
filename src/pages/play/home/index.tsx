@@ -16,6 +16,7 @@ export default function HomePage() {
   const { data } = useQuery({
     queryKey: ["nfts-user", address],
     queryFn: () => fetchNFTs(address as string),
+    enabled: !!address,
   });
 
   return (
