@@ -10,7 +10,8 @@ import MarketplaceDetailPage from "@/pages/play/marketplace/detail";
 import PlayLayout from "@/components/layout/PlayLayout";
 import ProfilePage from "./pages/play/profile";
 import WalletPage from "./pages/play/wallet";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { Loading } from "@/components/loading-provider";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
+      <Loading />
     </AnimatePresence>
   );
 }

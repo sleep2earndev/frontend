@@ -38,8 +38,8 @@ export default function ChooseCategory() {
             <h2 className='text-2xl font-bold mb-6'>Choose Your Categories</h2>
             <AnimatePresence>
                 {categories.map((category, index) => (
-                    <FadeWrapper key={`cetegory-sleep-${index}`} delay={(index + 1) * 0.3}>
-                        <Card role='button' className="cursor-pointer hover:border-primary border border-transparent" onClick={() => handleChooseCategory(category.key as CategorySleep)}>
+                    <FadeWrapper key={`category-sleep-${index}-${category.key}`} delay={(index + 1) * 0.3}>
+                        <Card key={`category-sleep-${index}-${category.key}-card`} role='button' className="cursor-pointer hover:border-primary border border-transparent" onClick={() => handleChooseCategory(category.key as CategorySleep)}>
                             <CardHeader>
                                 {category.icon}
                                 <h3 className="font-bold text-xl">{category.name}</h3>
