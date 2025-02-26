@@ -8,6 +8,7 @@ import FadeWrapper from "@/components/animation/fade";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import { fetchNFTs } from "@/api/nft";
+import { useProfile } from "@/hooks/account-provider";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function HomePage() {
   const { data } = useQuery({
     queryKey: ["nfts-user", address],
     queryFn: () => fetchNFTs(address as string),
+    enabled: !!address,
   });
 
   return (
