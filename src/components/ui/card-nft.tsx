@@ -1,11 +1,7 @@
 // import { Badge } from "./badge";
 import IconEnergy from "@/components/icon/energy";
 import { Button } from "./button";
-import {
-  useAccount,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import abi from "@/abi/sleepnft.json";
 import { useQuery } from "@tanstack/react-query";
@@ -15,12 +11,27 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { useLoading } from "@/components/loading-provider";
 
-export default function CardNft({ data }) {
+interface NftData {
+  metadata?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    attributes?: { trait_type: string; value: any }[];
+  };
+  contract?: {
+    address?: string;
+  };
+  id?: {
+    tokenId?: string;
+  };
+  media?: { gateway?: string }[];
+  title?: string;
+}
+
+export default function CardNft({ data }: { data: NftData }) {
   const { setLoading } = useLoading();
   const { convertWei } = useCurrency();
 
   const maxEnergy = data?.metadata?.attributes?.find(
-    (attr: any) => attr.trait_type === "Energy"
+    (attr) => attr.trait_type === "Energy"
   )?.value;
   const maxEarn = data?.metadata?.attributes?.find(
     (attr) => attr.trait_type === "Max Earn"
@@ -47,14 +58,14 @@ export default function CardNft({ data }) {
   function handleBuyNft() {
     writeContract({
       abi,
-      address: data?.contract?.address,
+      address: data?.contract?.address as `0x${string}`,
       functionName: "buyNFT",
       args: [data?.id?.tokenId],
     });
   }
 
   async function fetchNFTs() {
-    const decimalValue = BigInt(data?.id?.tokenId).toString();
+    const decimalValue = BigInt(data?.id?.tokenId as string).toString();
     const url = `https://testnets-api.opensea.io/api/v2/listings/collection/${
       import.meta.env.VITE_COLLECTION_SLUG_NFT
     }/nfts/${decimalValue}/best`;

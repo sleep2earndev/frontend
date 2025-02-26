@@ -9,7 +9,6 @@ import {
   useAccount,
 } from "wagmi";
 import abi from "@/abi/claim.json";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useLoading } from "@/components/loading-provider";
 import { toast } from "sonner";
@@ -19,7 +18,7 @@ import { toast } from "sonner";
 export default function Sleep() {
   const { setLoading } = useLoading();
   const { address } = useAccount();
-  const { writeContract, isPending, data: hash } = useWriteContract();
+  const { writeContract, data: hash } = useWriteContract();
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
