@@ -12,8 +12,13 @@ import ProfilePage from "./pages/play/profile";
 import WalletPage from "./pages/play/wallet";
 import { AnimatePresence, motion } from "motion/react";
 import { Loading } from "@/components/loading-provider";
+import { useEffect } from "react";
+import { getProfile } from "./api/user";
 
 function App() {
+  useEffect(() => {
+    getProfile();
+  }, []);
   return (
     <AnimatePresence>
       <Routes>

@@ -18,7 +18,7 @@ import FadeWrapper from "@/components/animation/fade";
 
 export default function LandingPage() {
   function login() {
-    window.location.href = "https://api-snoorefi.syaad.dev/user/auth/fitbit";
+    window.location.href = `${import.meta.env.VITE_API_URL}/user/auth/fitbit`;
   }
   return (
     <FadeWrapper className="flex min-h-screen flex-col">
