@@ -10,7 +10,7 @@ type ProfileProviderProps = {
 
 type ProfileProviderState = {
   profile: ProfileData | null;
-  setProfile: React.Dispatch<React.SetStateAction<null>>;
+  setProfile: (profile: ProfileData) => void;
 };
 
 const initialState: ProfileProviderState = {
@@ -22,7 +22,7 @@ const ProfileProviderContext =
   createContext<ProfileProviderState>(initialState);
 
 export function ProfileProvider({ children, ...props }: ProfileProviderProps) {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
 
   const value = useMemo<ProfileProviderState>(() => {
     return {
