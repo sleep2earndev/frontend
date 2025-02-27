@@ -26,7 +26,7 @@ export default function ModalNft({ open, onOpenChange }: ModalNftProps) {
 
     return (
         <Modal title="Choose your NFT" open={open} onOpenChange={onOpenChange}>
-            <div className="mt-2 max-h-[calc(100vh-20vh)] overflow-scroll px-2">
+            <div className="mt-2 max-h-[calc(100vh-20vh)] overflow-y-auto px-2">
                 <ListNft loading={isLoading} data={data as NftData[]} type="choose" onChoose={onChoose} />
             </div>
         </Modal>

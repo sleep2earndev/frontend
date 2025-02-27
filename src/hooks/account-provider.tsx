@@ -51,7 +51,6 @@ export const ProfileWrapper = ({ children }: { children: React.ReactNode }) => {
   const { setProfile } = useProfile();
   const location = useLocation();
 
-
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,

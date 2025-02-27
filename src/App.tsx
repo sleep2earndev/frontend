@@ -14,7 +14,6 @@ import { AnimatePresence } from "motion/react";
 import { Loading } from "@/components/loading-provider";
 
 function App() {
-
   return (
     <AnimatePresence>
       <Routes>

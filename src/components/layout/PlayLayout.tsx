@@ -33,7 +33,6 @@ export default function PlayLayout() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location.pathname)
     if (location.pathname.startsWith('/play/sleep')) {
       setBottomBarVisible(false)
       setProfileHeaderVisible(false)
