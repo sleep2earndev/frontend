@@ -19,7 +19,7 @@ export default function MarketplacePage() {
 
   return (
     <FadeWrapper className="p-4">
-      <ListNft loading={isLoading} data={data} type="marketplace"/>
+      <ListNft loading={isLoading} data={data || []} type="marketplace"/>
     </FadeWrapper>
   );
 }
