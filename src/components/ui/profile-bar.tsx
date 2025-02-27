@@ -11,7 +11,7 @@ export default function ProfileBar() {
   const { profile } = useProfile();
   const { address } = useAccount()
 
-  const { data, isError, isLoading } = useBalance({
+  const { data } = useBalance({
     address: address,
   })
 

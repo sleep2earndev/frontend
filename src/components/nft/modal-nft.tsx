@@ -5,7 +5,13 @@ import { useAccount } from "wagmi";
 import ListNft from "./list-nft";
 import { NftData } from "../ui/card-nft";
 
-export default function ModalNft({ open, onOpenChange, ...props }) {
+interface ModalNftProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    [key: string]: unknown;
+}
+
+export default function ModalNft({ open, onOpenChange }: ModalNftProps) {
     const { address } = useAccount()
     const { data, isLoading } = useQuery({
         queryKey: ["nfts", address],

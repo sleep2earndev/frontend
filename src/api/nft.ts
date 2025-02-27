@@ -1,11 +1,6 @@
-export type NFT = {
-  title: string;
-  description: string;
-  tokenId: string;
-  media: { gateway: string }[]; // Gambar NFT
-};
+import { NftData } from "@/components/ui/card-nft";
 
-export async function fetchNFTs(ownerAddress: string): Promise<NFT[]> {
+export async function fetchNFTs(ownerAddress: string): Promise<NftData[]> {
   const url = `${import.meta.env.VITE_ALCHEMY_URL}/v2/${
     import.meta.env.VITE_API_KEY_ALCHEMY
   }/getNFTs/?owner=${ownerAddress}`;
@@ -13,7 +8,7 @@ export async function fetchNFTs(ownerAddress: string): Promise<NFT[]> {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    return data.ownedNfts as NFT[]; // Casting ke tipe NFT[]
+    return data.ownedNfts as NftData[]; // Casting ke tipe NFT[]
   } catch (error) {
     console.error("Error fetching NFTs:", error);
     return [];
