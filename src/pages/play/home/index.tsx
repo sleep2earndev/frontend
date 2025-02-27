@@ -88,8 +88,8 @@ export default function HomePage() {
           </div>
         </CardContent>
       </Card>
-      <div className="mt-6 flex flex-col gap-4">
-        <div className="flex gap-2">
+      <div className="mt-6 flex flex-col gap-5">
+        <div className="flex gap-4">
           <HandCoins />
           <div className="flex-1 flex flex-col">
             <Progress

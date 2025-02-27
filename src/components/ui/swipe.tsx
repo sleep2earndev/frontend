@@ -1,81 +1,88 @@
-"use client";
-
 import type React from "react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function Swipe({
-  children,
-  onSwipe,
-  ...props
-}: {
+interface SwipeProps {
   children: React.ReactNode;
-  [k: string]: any;
-}) {
+  onSwipe: () => void;
+  className?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+export interface SwipeRef {
+  reset: () => void;
+}
+
+const Swipe = forwardRef<SwipeRef, SwipeProps>(({ children, onSwipe, ...props }, ref) => {
   const [sliding, setSliding] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [isSuccess, setIsSuccess] = useState(false); // Tambahkan state ini
+  const [, setProgress] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
+  const progressRef = useRef(0);
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    if (isSuccess) return; // Cegah swipe lagi setelah sukses
+    if (isSuccess) return;
     setSliding(true);
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     startXRef.current = clientX - (currentXRef.current || 0);
   };
 
-  const handleTouchMove = useCallback(
-    (e: TouchEvent | MouseEvent) => {
-      if (!sliding || isSuccess) return; // Cegah jika sudah sukses
+  const handleTouchMove = useCallback((e: TouchEvent | MouseEvent) => {
+    if (!sliding || isSuccess) return;
 
-      const clientX =
-        "touches" in e
-          ? (e as TouchEvent).touches[0].clientX
-          : (e as MouseEvent).clientX;
-      const containerWidth = containerRef.current?.offsetWidth ?? 0;
-      const sliderWidth = sliderRef.current?.offsetWidth ?? 0;
-      const maxTravel = containerWidth - sliderWidth;
+    const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+    const containerWidth = containerRef.current?.offsetWidth ?? 0;
+    const sliderWidth = sliderRef.current?.offsetWidth ?? 0;
+    const maxTravel = containerWidth - sliderWidth;
 
-      let travel = clientX - startXRef.current;
-      travel = Math.max(0, Math.min(travel, maxTravel));
+    let travel = clientX - startXRef.current;
+    travel = Math.max(0, Math.min(travel, maxTravel));
 
-      currentXRef.current = travel;
-      setProgress((travel / maxTravel) * 100);
+    currentXRef.current = travel;
+    progressRef.current = (travel / maxTravel) * 100;
+    setProgress(progressRef.current);
 
-      if (sliderRef.current) {
-        sliderRef.current.style.transform = `translateX(${travel - 10}px)`;
-      }
+    if (sliderRef.current) {
+      sliderRef.current.style.transform = `translateX(${travel}px)`;
+    }
 
-      if (!isSuccess && progress >= 95) {
-        handleSuccess();
-      }
-    },
-    [sliding, progress, isSuccess]
-  );
+    if (!isSuccess && progressRef.current >= 95) {
+      handleSuccess();
+    }
+  }, [sliding, isSuccess]);
 
   const handleTouchEnd = useCallback(() => {
-    if (!sliding || isSuccess) return; // Cegah jika sudah sukses
+    if (!sliding || isSuccess) return;
     setSliding(false);
 
-    if (progress < 95) {
-      // Reset posisi slider jika belum sukses
-      if (sliderRef.current) {
-        sliderRef.current.style.transform = "translateX(0px)";
-        currentXRef.current = 0;
-        setProgress(0);
-      }
+    if (progressRef.current < 95) {
+      reset();
     }
-  }, [progress, sliding, isSuccess]);
+  }, [sliding, isSuccess]);
 
   const handleSuccess = () => {
-    if (isSuccess) return; // Cegah pemanggilan ulang
-    setIsSuccess(true); // Tandai sudah sukses
-    onSwipe(); // Panggil callback sukses
+    if (isSuccess) return;
+    setSliding(false);
+    setIsSuccess(true);
+    onSwipe();
   };
+
+  const reset = () => {
+    if (sliderRef.current) {
+      sliderRef.current.style.transform = "translateX(0px)";
+    }
+    currentXRef.current = 0;
+    progressRef.current = 0;
+    setProgress(0);
+    setIsSuccess(false);
+  };
+
+  useImperativeHandle(ref, () => ({ reset }));
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => handleTouchMove(e);
@@ -91,6 +98,18 @@ export default function Swipe({
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [sliding, handleTouchMove, handleTouchEnd]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        reset();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return (
     <div
@@ -119,4 +138,6 @@ export default function Swipe({
       </div>
     </div>
   );
-}
+});
+
+export default Swipe;
