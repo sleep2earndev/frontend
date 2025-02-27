@@ -1,17 +1,18 @@
 // import { Badge } from "./badge";
 import IconEnergy from "@/components/icon/energy";
 import { Button } from "./button";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import abi from "@/abi/sleepnft.json";
-import { useQuery } from "@tanstack/react-query";
 import useCurrency from "@/hooks/useCurrency";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLoading } from "@/components/loading-provider";
 import IconWallet from "@/components/icon/wallet";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+import { motion } from "motion/react";
 
 export interface NftData {
   metadata?: {
@@ -38,6 +39,15 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
     }
     return
   }, [data])
+
+  const { data: priceContract, isLoading: isLoadingPrice } = useReadContract({
+    abi,
+    address: '0x220D082ce4baD2D54ac1Bb09fE0124CAc4667FBf',
+    functionName: 'getListingData',
+    args: [[tokenId]]
+  })
+
+  
 
   const maxEnergy = data?.metadata?.attributes?.find(
     (attr) => attr.trait_type === "Energy"
@@ -68,8 +78,10 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
     writeContract({
       abi,
       address: data?.contract?.address as `0x${string}`,
-      functionName: "buyNFT",
+      functionName: "buyItem",
       args: [tokenId],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      value: (priceContract as any)?.[0]?.price
     });
   }
 
@@ -77,30 +89,11 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
     onChoose(data)
   }
 
-  async function fetchNFTs() {
-    const url = `${import.meta.env.VITE_OPENSEA_URL}/api/v2/listings/collection/${import.meta.env.VITE_COLLECTION_SLUG_NFT
-      }/nfts/${tokenId}/best`;
-    try {
-      const response = await fetch(url, {
-        headers: { "X-API-KEY": import.meta.env.VITE_API_KEY_OPENSEA },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching NFTs:", error);
-      return [];
-    }
-  }
-
-  const { data: detail } = useQuery({
-    queryKey: ["nft-detail", `${data?.contract?.address}-${data?.id?.tokenId}`],
-    queryFn: fetchNFTs,
-    enabled: type === 'marketplace'
-  });
 
   const price = convertWei(
-    Number(detail?.price?.current?.value || 0),
-    detail?.price?.current?.decimals
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Number((priceContract as any)?.[0]?.price || 0),
+    18
   );
 
   useEffect(() => {
@@ -125,14 +118,25 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
     }
   }, [isLoading]);
 
+  const [loadingImage, setLoadingImage] = useState(true)
+
   return (
     <div className="nft-card" role="button">
-      <div className="border border-white">
-        <img src={data?.media?.[0]?.gateway} alt={data?.title} />
+      <div className="border border-white relative w-[143px] aspect-square">
+        {loadingImage && <motion.div className="w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0" exit={{ opacity: 0 }}>
+          <Loader2 className="animate-spin" />
+        </motion.div>}
+
+        <img src={data?.media?.[0]?.gateway || 'https://placehold.co/143x143'} alt={data?.title} onError={({ currentTarget }) => {
+          currentTarget.onerror = null; // prevents looping
+          currentTarget.src = "https://placehold.co/143x143";
+        }}
+          onLoad={() => setLoadingImage(false)}
+        />
       </div>
 
       <div className="flex justify-center">
-        {type === 'marketplace' && <Badge
+        {(type === 'marketplace' && !isLoadingPrice) && <Badge
           variant={"outline"}
           className={cn("bg-background/30 text-[#F59D0B] border-[#F59D0B]", {
             'opacity-30': !price
