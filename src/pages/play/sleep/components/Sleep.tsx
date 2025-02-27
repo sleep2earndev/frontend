@@ -23,18 +23,18 @@ export default function Sleep() {
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
-  const { profile } = useProfile()
-  const {data} = useSleep()
+  const { profile } = useProfile();
+  const { data } = useSleep();
 
   const selectedNFT = useMemo<NftData | null>(() => {
-    const selected = localStorage.getItem('nft-selected')
+    const selected = localStorage.getItem("nft-selected");
     if (selected) {
-      const data = JSON.parse(selected)
-      return data as NftData
+      const data = JSON.parse(selected);
+      return data as NftData;
     }
 
-    return null
-  }, [])
+    return null;
+  }, []);
 
   function handleClaim() {
     writeContract({
@@ -65,7 +65,8 @@ export default function Sleep() {
         <div className="pt-12 flex flex-col gap-10 relative z-10">
           <FadeWrapper delay={0.3}>
             <h2 className="text-2xl font-bold text-center">
-              Happy Sleep, {profile?.extractedParameters?.fullName?.split(' ')?.[0]}!
+              Happy Sleep,{" "}
+              {profile?.extractedParameters?.fullName?.split(" ")?.[0]}!
             </h2>
           </FadeWrapper>
           <FadeWrapper delay={0.4}>

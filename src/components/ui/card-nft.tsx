@@ -1,7 +1,11 @@
 // import { Badge } from "./badge";
 import IconEnergy from "@/components/icon/energy";
 import { Button } from "./button";
-import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
 import abi from "@/abi/sleepnft.json";
 import useCurrency from "@/hooks/useCurrency";
@@ -29,25 +33,31 @@ export interface NftData {
   title?: string;
 }
 
-export default function CardNft({ data, type = 'marketplace', onChoose = () => { } }: { data: NftData, type?: 'marketplace' | 'choose', onChoose?: (data: NftData) => void }) {
+export default function CardNft({
+  data,
+  type = "marketplace",
+  onChoose = () => {},
+}: {
+  data: NftData;
+  type?: "marketplace" | "choose";
+  onChoose?: (data: NftData) => void;
+}) {
   const { setLoading } = useLoading();
   const { convertWei, convertTokenIdNft } = useCurrency();
 
   const tokenId = useMemo(() => {
     if (data.id) {
-      return convertTokenIdNft(data?.id?.tokenId as string)
+      return convertTokenIdNft(data?.id?.tokenId as string);
     }
-    return
-  }, [data])
+    return;
+  }, [data]);
 
   const { data: priceContract, isLoading: isLoadingPrice } = useReadContract({
     abi,
-    address: '0x220D082ce4baD2D54ac1Bb09fE0124CAc4667FBf',
-    functionName: 'getListingData',
-    args: [[tokenId]]
-  })
-
-  
+    address: "0x220D082ce4baD2D54ac1Bb09fE0124CAc4667FBf",
+    functionName: "getListingData",
+    args: [[tokenId]],
+  });
 
   const maxEnergy = data?.metadata?.attributes?.find(
     (attr) => attr.trait_type === "Energy"
@@ -81,14 +91,13 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
       functionName: "buyItem",
       args: [tokenId],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      value: (priceContract as any)?.[0]?.price
+      value: (priceContract as any)?.[0]?.price,
     });
   }
 
   function handleChoose() {
-    onChoose(data)
+    onChoose(data);
   }
-
 
   const price = convertWei(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,32 +127,42 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
     }
   }, [isLoading]);
 
-  const [loadingImage, setLoadingImage] = useState(true)
+  const [loadingImage, setLoadingImage] = useState(true);
 
   return (
     <div className="nft-card" role="button">
       <div className="border border-white relative w-[143px] aspect-square">
-        {loadingImage && <motion.div className="w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0" exit={{ opacity: 0 }}>
-          <Loader2 className="animate-spin" />
-        </motion.div>}
+        {loadingImage && (
+          <motion.div
+            className="w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0"
+            exit={{ opacity: 0 }}
+          >
+            <Loader2 className="animate-spin" />
+          </motion.div>
+        )}
 
-        <img src={data?.media?.[0]?.gateway || 'https://placehold.co/143x143'} alt={data?.title} onError={({ currentTarget }) => {
-          currentTarget.onerror = null; // prevents looping
-          currentTarget.src = "https://placehold.co/143x143";
-        }}
+        <img
+          src={data?.media?.[0]?.gateway || "https://placehold.co/143x143"}
+          alt={data?.title}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = "https://placehold.co/143x143";
+          }}
           onLoad={() => setLoadingImage(false)}
         />
       </div>
 
       <div className="flex justify-center">
-        {(type === 'marketplace' && !isLoadingPrice) && <Badge
-          variant={"outline"}
-          className={cn("bg-background/30 text-[#F59D0B] border-[#F59D0B]", {
-            'opacity-30': !price
-          })}
-        >
-          {price ? `${price} ETH` : 'Not listed'}
-        </Badge>}
+        {type === "marketplace" && !isLoadingPrice && (
+          <Badge
+            variant={"outline"}
+            className={cn("bg-background/30 text-[#F59D0B] border-[#F59D0B]", {
+              "opacity-30": !price,
+            })}
+          >
+            {price ? `${price} ETH` : "Not listed"}
+          </Badge>
+        )}
       </div>
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
@@ -157,8 +176,8 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
           </div>
         </div>
 
-        {
-          type === 'marketplace' && <Button
+        {type === "marketplace" && (
+          <Button
             className="text-white text-xs custom-box-shadow"
             size={"sm"}
             disabled={isPending || !price}
@@ -166,10 +185,10 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
           >
             Buy
           </Button>
-        }
+        )}
 
-        {
-          type === 'choose' && <Button
+        {type === "choose" && (
+          <Button
             className="text-white text-xs custom-box-shadow bg-[#F59D0B]"
             size={"sm"}
             disabled={isPending}
@@ -177,7 +196,7 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
           >
             Choose
           </Button>
-        }
+        )}
       </div>
     </div>
   );
