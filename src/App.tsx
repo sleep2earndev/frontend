@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
+import { Route, Routes } from "react-router";
 import LandingPage from "@/pages";
 import HomePage from "@/pages/play/home";
 import SleepPage from "@/pages/play/sleep";
