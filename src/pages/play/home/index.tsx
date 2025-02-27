@@ -9,10 +9,14 @@ import { HandCoins, InfoIcon, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import ModalNft from "@/components/nft/modal-nft";
 import { NftData } from "@/components/ui/card-nft";
+import { useAccount } from "wagmi";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false)
+
+  const {address} = useAccount()
+
 
   const selectedNFT = useMemo<NftData | null>(() => {
     const selected = localStorage.getItem('nft-selected')
@@ -31,6 +35,11 @@ export default function HomePage() {
     }, {} as { [key: string]: unknown });
   }, [selectedNFT])
 
+  function handleChooseNFT() {
+    if(!address) return navigate('/play/wallet')
+    setOpenModal(true)
+  }
+
   return (
     <FadeWrapper className="p-4">
       <ModalNft open={openModal} onOpenChange={setOpenModal} />
@@ -40,11 +49,11 @@ export default function HomePage() {
             <div
               className="relative"
               role="button"
-              onClick={() => setOpenModal(true)}
+              onClick={handleChooseNFT}
             >
               {selectedNFT ? <div >
                 <img src={selectedNFT.media?.[0]?.gateway} />
-                <Button size={'icon'} variant={'outline'} className="bg-white border-background text-background absolute right-2 bottom-2" onClick={() => setOpenModal(true)}><RefreshCcw /></Button>
+                <Button size={'icon'} variant={'outline'} className="bg-white border-background text-background absolute right-2 bottom-2" onClick={handleChooseNFT}><RefreshCcw /></Button>
               </div> : <div className="p-12 flex justify-center items-center flex-col gap-2">
                 <IconPlus className="w-12 h-12 text-white/30" />
                 <p className="text-white/30">Add My Pillow</p>
@@ -76,6 +85,8 @@ export default function HomePage() {
         <Button
           className="text-white"
           onClick={() => {
+            if(!address) return navigate('/play/wallet')
+            if(selectedNFT) handleChooseNFT()
             navigate("/play/sleep");
           }}
         >
