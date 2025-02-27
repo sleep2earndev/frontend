@@ -30,6 +30,12 @@ const initialState: SleepProviderState = {
     setData: () => { }
 }
 
+export const SLEEP_DATA= {
+    "night-sleep": "Night Sleep",
+    "day-nap": "Day Nap",
+    "power-nap": "Power Nap"
+}
+
 const SleepProviderContext = createContext<SleepProviderState>(initialState);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
