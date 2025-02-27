@@ -1,5 +1,4 @@
 import FadeWrapper from "@/components/animation/fade";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import Swipe from "@/components/ui/swipe";
 // import { motion } from "motion/react";
@@ -8,12 +7,14 @@ import {
   useWaitForTransactionReceipt,
   useAccount,
 } from "wagmi";
-import abi from "@/abi/claim.json";
-import { useEffect } from "react";
+import abi from "@/abi/sleepnft.json";
+import { useEffect, useMemo } from "react";
 import { useLoading } from "@/components/loading-provider";
 import { toast } from "sonner";
-
-// import { useAccount } from '@wagmi'
+import { useProfile } from "@/hooks/account-provider";
+import { NftData } from "@/components/ui/card-nft";
+import { Badge } from "@/components/ui/badge";
+import { SLEEP_DATA, useSleep } from "../hooks/sleep-provider";
 
 export default function Sleep() {
   const { setLoading } = useLoading();
@@ -22,11 +23,23 @@ export default function Sleep() {
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
+  const { profile } = useProfile()
+  const {data} = useSleep()
+
+  const selectedNFT = useMemo<NftData | null>(() => {
+    const selected = localStorage.getItem('nft-selected')
+    if (selected) {
+      const data = JSON.parse(selected)
+      return data as NftData
+    }
+
+    return null
+  }, [])
 
   function handleClaim() {
     writeContract({
       abi,
-      address: import.meta.env.VITE_ADDRESS_CONTRACT,
+      address: import.meta.env.VITE_ADDRESS_NFT,
       functionName: "rewardUser",
       args: [address, 1],
     });
@@ -52,7 +65,7 @@ export default function Sleep() {
         <div className="pt-12 flex flex-col gap-10 relative z-10">
           <FadeWrapper delay={0.3}>
             <h2 className="text-2xl font-bold text-center">
-              Good Night, Mori!
+              Happy Sleep, {profile?.extractedParameters?.fullName?.split(' ')?.[0]}!
             </h2>
           </FadeWrapper>
           <FadeWrapper delay={0.4}>
@@ -61,7 +74,7 @@ export default function Sleep() {
           <FadeWrapper delay={0.4}>
             <div className="flex justify-center">
               <Badge variant="outline" className="border-white rounded-md">
-                Earning: +0
+                {SLEEP_DATA?.[data.category as keyof typeof SLEEP_DATA]}
               </Badge>
             </div>
           </FadeWrapper>
@@ -69,8 +82,8 @@ export default function Sleep() {
             <Card className="border-2 border-white bg-primary">
               <CardContent>
                 <div className="pt-6">
-                  <div className="p-12 flex justify-center items-center flex-col gap-2">
-                    <p className="text-white/30">NFT Pillow</p>
+                  <div className="flex justify-center items-center flex-col gap-2">
+                    <img src={selectedNFT?.media?.[0]?.gateway} />
                   </div>
                 </div>
               </CardContent>

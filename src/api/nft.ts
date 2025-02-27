@@ -6,7 +6,7 @@ export type NFT = {
 };
 
 export async function fetchNFTs(ownerAddress: string): Promise<NFT[]> {
-  const url = `https://eth-sepolia.g.alchemy.com/v2/${
+  const url = `${import.meta.env.VITE_ALCHEMY_URL}/v2/${
     import.meta.env.VITE_API_KEY_ALCHEMY
   }/getNFTs/?owner=${ownerAddress}`;
 
