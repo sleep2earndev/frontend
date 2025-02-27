@@ -131,14 +131,14 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
       </div>
 
       <div className="flex justify-center">
-        <Badge
+        {type === 'marketplace' && <Badge
           variant={"outline"}
           className={cn("bg-background/30 text-[#F59D0B] border-[#F59D0B]", {
             'opacity-30': !price
           })}
         >
           {price ? `${price} ETH` : 'Not listed'}
-        </Badge>
+        </Badge>}
       </div>
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
