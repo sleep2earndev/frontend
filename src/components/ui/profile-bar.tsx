@@ -11,7 +11,7 @@ export default function ProfileBar() {
   const { profile } = useProfile();
   const { address } = useAccount()
 
-  const { data } = useBalance({
+  const { data, isLoading } = useBalance({
     address: address,
   })
 
@@ -36,12 +36,13 @@ export default function ProfileBar() {
       </Avatar>
       <NavLink
         to={"/play/wallet"}
-        className="bg-white p-1 rounded-full text-background text-xs flex items-center"
+        className={cn("bg-white p-1 rounded-full text-background text-xs flex items-center", {
+          'opacity-60': !address
+        })}
         role="button"
       >
-        <span className="px-1">{balance}</span>
+        {address ? <span className="px-1">{isLoading ? "..." : balance}</span> : <span className="px-1">Connect Now</span>}
         <div className="bg-white rounded-full p-1 border border-background">
-          {/* <IconWallet className="text-white w-4 h-4" /> */}
           <IconEthereum className="w-4 h-4" />
         </div>
       </NavLink>

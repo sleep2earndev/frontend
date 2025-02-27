@@ -131,10 +131,10 @@ export default function CardNft({
 
   return (
     <div className="nft-card" role="button">
-      <div className="border border-white relative w-[143px] aspect-square">
+      <div className="border border-white relative w-full max-w-[143px] aspect-square">
         {loadingImage && (
           <motion.div
-            className="w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0"
+            className="w-full max-w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0"
             exit={{ opacity: 0 }}
           >
             <Loader2 className="animate-spin" />
@@ -149,6 +149,7 @@ export default function CardNft({
             currentTarget.src = "https://placehold.co/143x143";
           }}
           onLoad={() => setLoadingImage(false)}
+          className="w-full aspect-square"
         />
       </div>
 

@@ -3,7 +3,7 @@ import IconPowerNap from "@/components/icon/power-nap";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence } from "motion/react";
-import { CategorySleep, useSleep } from "../hooks/sleep-provider";
+import { CategorySleep, useSleep } from "@/hooks/sleep-provider";
 
 const categories = [
   {
@@ -27,10 +27,10 @@ const categories = [
 ];
 
 export default function ChooseCategory() {
-  const { setData, setStep, data } = useSleep();
+  const { setData, setStep } = useSleep();
 
   function handleChooseCategory(key: CategorySleep) {
-    setData({ ...data, category: key });
+    setData({ category: key });
     setStep("confirm");
   }
   return (

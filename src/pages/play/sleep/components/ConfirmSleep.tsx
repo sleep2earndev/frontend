@@ -3,19 +3,28 @@ import { Button } from "@/components/ui/button";
 import { PlayIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { useSleep } from "@/pages/play/sleep/hooks/sleep-provider";
+import { useSleep } from "@/hooks/sleep-provider";
+import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
+import { getCurrentDate } from "@/lib/utils";
 
 export default function ConfirmSleep() {
   const [isExpanding, setIsExpanding] = useState(false);
-  const { setStep } = useSleep();
+  const { setStep, setData } = useSleep();
 
   const handleClick = () => {
     setIsExpanding(true);
+    setData({
+      startTime: getCurrentDate(),
+    })
     const timeout = setTimeout(() => {
       setStep("sleep");
       clearTimeout(timeout);
     }, 700);
   };
+
+  useLeaveConfirmation({
+    isBlocked: true
+  })
 
   return (
     <FadeWrapper className="p-4 flex-1 flex gap-12 flex-col items-center justify-center">

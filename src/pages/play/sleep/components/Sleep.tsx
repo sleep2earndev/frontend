@@ -1,30 +1,63 @@
 import FadeWrapper from "@/components/animation/fade";
 import { Card, CardContent } from "@/components/ui/card";
-import Swipe from "@/components/ui/swipe";
-// import { motion } from "motion/react";
+import Swipe, { SwipeRef } from "@/components/ui/swipe";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
-  useAccount,
 } from "wagmi";
-import abi from "@/abi/sleepnft.json";
-import { useEffect, useMemo } from "react";
+import abi from "@/abi/claim.json";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLoading } from "@/components/loading-provider";
-import { toast } from "sonner";
 import { useProfile } from "@/hooks/account-provider";
 import { NftData } from "@/components/ui/card-nft";
 import { Badge } from "@/components/ui/badge";
-import { SLEEP_DATA, useSleep } from "../hooks/sleep-provider";
+import { SLEEP_DATA, useSleep } from "@/hooks/sleep-provider";
+import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
+import useCurrentTime from "@/hooks/use-current-time";
+import { useMutation } from "@tanstack/react-query";
+import { claimEarn } from "@/api/user";
+import { toast } from "sonner";
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { getCurrentDate } from "@/lib/utils";
+
 
 export default function Sleep() {
   const { setLoading } = useLoading();
-  const { address } = useAccount();
-  const { writeContract, data: hash } = useWriteContract();
+  const { profile } = useProfile();
+  const { data, setData, setStep } = useSleep();
+
+  const currentTime = useCurrentTime()
+
+  useLeaveConfirmation({
+    isBlocked: true
+  })
+
+
+  const swipeRef = useRef<SwipeRef>(null)
+  const [openNotifWallet, setOpenNotifWallet] = useState(false)
+
+  const { writeContract, data: hash } = useWriteContract({
+    mutation: {
+      onError(error) {
+        console.log('[ERROR WALLET]: ', error)
+        toast.error("The transaction has been canceled.")
+        swipeRef.current?.reset?.()
+        setLoading(false);
+      },
+      onSuccess() {
+        setOpenNotifWallet(false)
+      },
+    }
+  });
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash,
+    retryCount: 0,
+    query: {
+      retryOnMount: false,
+    },
+
   });
-  const { profile } = useProfile();
-  const { data } = useSleep();
 
   const selectedNFT = useMemo<NftData | null>(() => {
     const selected = localStorage.getItem("nft-selected");
@@ -36,20 +69,67 @@ export default function Sleep() {
     return null;
   }, []);
 
-  function handleClaim() {
+  const { mutateAsync } = useMutation({
+    retry: false,
+    mutationFn: claimEarn,
+    onSuccess(data) {
+      if (!data.success || !data.earn) {
+        setLoading(false)
+        setStep('failed')
+        return
+      }
+      setOpenNotifWallet(true)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const extractedParameters = JSON.parse(data.sleep.claimInfo.context) as { extractedParameters: { duration: number, [k: string]: any } }
+      setData({
+        earning: data.earn,
+        duration: extractedParameters.extractedParameters.duration,
+      })
+
+      claimReward(data.earn)
+    },
+    onError(error) {
+      console.warn(error)
+      toast.error('Get earning data failed, please try again')
+      swipeRef.current?.reset?.()
+      setLoading(false)
+    }
+  })
+
+  // function ethToWei(eth: number) {
+  //   return BigInt(Math.floor(eth * 10 ** 18));
+  // }
+
+  function claimReward(weiAmount: number) {
+    // const weiAmount = ethToWei(amount)
+
     writeContract({
       abi,
-      address: import.meta.env.VITE_ADDRESS_NFT,
-      functionName: "rewardUser",
-      args: [address, 1],
+      address: import.meta.env.VITE_ADDRESS_CLAIM,
+      functionName: "claimReward",
+      args: [weiAmount],
     });
   }
 
-  useEffect(() => {
-    if (isSuccess) toast.success("Success claim reward");
-  }, [isSuccess]);
+  function retryClaim() {
+    if (data.earning === 0) {
+      toast.warning('There is no reward remaining for you to claim.')
+      return
+    }
+    claimReward(data.earning as number)
+  }
 
-  const currentTime = "00:00";
+  async function handleClaim() {
+    setLoading(true)
+    const endDate = getCurrentDate()
+    await mutateAsync({
+      startDate: data.startTime,
+      endDate: endDate
+    })
+    setData({
+      endTime: endDate,
+    })
+  }
 
   useEffect(() => {
     if (isLoading) {
@@ -59,10 +139,22 @@ export default function Sleep() {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      setStep('success')
+    }
+  }, [isSuccess])
+
+
+
   return (
     <div className="p-6 fixed inset-0 bg-primary">
       <div className="play-layout__container">
         <div className="pt-12 flex flex-col gap-10 relative z-10">
+          <Modal open={openNotifWallet} onOpenChange={setOpenNotifWallet} title="Processing Transaction, Please Wait">
+            <p>Make sure to accept the transaction in your wallet to get your reward. If you have dismissed the confirmation popup, you can always reclaim your reward by clicking the 'Retry Claim Reward' button.</p>
+            <Button className="w-full mt-8" onClick={retryClaim}>Retry Claim Reward</Button>
+          </Modal>
           <FadeWrapper delay={0.3}>
             <h2 className="text-2xl font-bold text-center">
               Happy Sleep,{" "}
@@ -91,7 +183,7 @@ export default function Sleep() {
             </Card>
           </FadeWrapper>
           <FadeWrapper className="fixed flex justify-center left-6 right-6 bottom-6">
-            <Swipe className="flex-1" onSwipe={handleClaim}>
+            <Swipe ref={swipeRef} className="flex-1" onSwipe={handleClaim}>
               Swipe to Wake Up!
             </Swipe>
           </FadeWrapper>

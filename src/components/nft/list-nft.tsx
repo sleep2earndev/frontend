@@ -23,7 +23,7 @@ export default function ListNft({
     <div className={cn("grid grid-cols-2 gap-4", className)} {...props}>
       {data?.map((nft, index) => (
         <FadeWrapper
-          key={`card-nft-${index}`}
+          key={`card-nft-${index}-${type}`}
           transition={{ delay: index * 0.1 }}
         >
           <CardNft data={nft} type={type} onChoose={onChoose} />

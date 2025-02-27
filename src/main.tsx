@@ -15,6 +15,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { LoadingProvider } from "@/components/loading-provider.tsx";
 import { ProfileProvider, ProfileWrapper } from "@/hooks/account-provider.tsx";
+import { SleepProvider } from "./hooks/sleep-provider.tsx";
 
 const queryClient = new QueryClient();
 
@@ -25,14 +26,16 @@ createRoot(document.getElementById("root")!).render(
         <RainbowKitProvider>
           <ThemeProvider defaultTheme="dark" storageKey="snoorefi-ui-theme">
             <BrowserRouter>
-              <LoadingProvider>
-                <ProfileProvider>
-                  <ProfileWrapper>
-                    <App />
-                  </ProfileWrapper>
-                  <Toaster richColors />
-                </ProfileProvider>
-              </LoadingProvider>
+              <SleepProvider>
+                <LoadingProvider>
+                  <ProfileProvider>
+                    <ProfileWrapper>
+                      <App />
+                    </ProfileWrapper>
+                    <Toaster richColors />
+                  </ProfileProvider>
+                </LoadingProvider>
+              </SleepProvider>
             </BrowserRouter>
           </ThemeProvider>
         </RainbowKitProvider>

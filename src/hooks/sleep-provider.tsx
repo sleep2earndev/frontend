@@ -20,12 +20,13 @@ type SleepProviderState = {
   step: StepSleep;
   setStep: (step: StepSleep) => void;
   data: DataSleep;
-  setData: (data: DataSleep) => void;
+  setData: (data: Partial<DataSleep>) => void;
+  clearData: () => void
 };
 
 const initialState: SleepProviderState = {
   step: "choose-category",
-  setStep: () => {},
+  setStep: () => { },
   data: {
     category: "",
     earning: 0,
@@ -33,7 +34,8 @@ const initialState: SleepProviderState = {
     endTime: "",
     startTime: "",
   },
-  setData: () => {},
+  setData: () => { },
+  clearData: () => {}
 };
 
 export const SLEEP_DATA = {
@@ -44,6 +46,23 @@ export const SLEEP_DATA = {
 
 const SleepProviderContext = createContext<SleepProviderState>(initialState);
 
+const storageKey = 'data-sleep'
+
+function getDefaultDataSleep() {
+  const sleepStorage = localStorage.getItem(storageKey)
+  if (sleepStorage) {
+    return JSON.parse(sleepStorage)
+  }
+
+  return {
+    category: "",
+    earning: 0,
+    duration: 0,
+    endTime: "",
+    startTime: "",
+  }
+}
+
 export function SleepProvider({
   children,
   ...props
@@ -53,20 +72,33 @@ export function SleepProvider({
   [k: string]: any;
 }) {
   const [step, setStep] = useState<StepSleep>("choose-category");
-  const [data, setData] = useState<DataSleep>({
-    category: "",
-    earning: 0,
-    duration: 0,
-    endTime: "",
-    startTime: "",
-  });
+
+  const [data, setData] = useState<DataSleep>(() => getDefaultDataSleep());
+
+  function updateData(newData: Partial<DataSleep>) {
+    setData(prev => {
+      const _newData = {
+        ...prev,
+        ...newData
+      }
+      localStorage.setItem(storageKey, JSON.stringify(_newData))
+      return _newData
+    })
+  }
+
+  function clearData() {
+    setData(() => getDefaultDataSleep())
+    localStorage.removeItem(storageKey)
+  }
+
   return (
     <SleepProviderContext.Provider
       value={{
         step,
         setStep,
         data,
-        setData,
+        setData: updateData,
+        clearData
       }}
       {...props}
     >
