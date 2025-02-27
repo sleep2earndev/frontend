@@ -95,6 +95,7 @@ export default function CardNft({ data, type = 'marketplace', onChoose = () => {
   const { data: detail } = useQuery({
     queryKey: ["nft-detail", `${data?.contract?.address}-${data?.id?.tokenId}`],
     queryFn: fetchNFTs,
+    enabled: type === 'marketplace'
   });
 
   const price = convertWei(
