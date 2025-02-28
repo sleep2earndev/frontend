@@ -58,7 +58,7 @@ export default function CardNft({
 
   const { data: priceContract, isLoading: isLoadingPrice } = useReadContract({
     abi,
-    address: "0x220D082ce4baD2D54ac1Bb09fE0124CAc4667FBf",
+    address: import.meta.env.VITE_ADDRESS_NFT as `0x${string}`,
     functionName: "getListingData",
     args: [[tokenId]],
   });
@@ -92,7 +92,7 @@ export default function CardNft({
   function handleBuyNft() {
     writeContract({
       abi,
-      address: data?.contract?.address as `0x${string}`,
+      address: import.meta.env.VITE_ADDRESS_NFT as `0x${string}`,
       functionName: "buyItem",
       args: [tokenId],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
