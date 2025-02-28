@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Modal } from "./modal";
 
 export interface NftData {
   metadata?: {
@@ -37,7 +38,7 @@ export interface NftData {
 export default function CardNft({
   data,
   type = "marketplace",
-  onChoose = () => {},
+  onChoose = () => { },
 }: {
   data: NftData;
   type?: "marketplace" | "choose";
@@ -45,6 +46,9 @@ export default function CardNft({
 }) {
   const { setLoading } = useLoading();
   const { convertWei, convertTokenIdNft } = useCurrency();
+
+  const [loadingImage, setLoadingImage] = useState(true);
+  const [openSuccess, setOpenSuccess] = useState(true);
 
   const queryClient = useQueryClient();
 
@@ -111,7 +115,8 @@ export default function CardNft({
   );
 
   useEffect(() => {
-    if(isSuccess) {
+    if (isSuccess) {
+      setOpenSuccess(true)
       queryClient.invalidateQueries({
         queryKey: ['nfts'],
         exact: false
@@ -141,14 +146,37 @@ export default function CardNft({
     }
   }, [isLoading]);
 
-  const [loadingImage, setLoadingImage] = useState(true);
 
   return (
     <div className="nft-card" role="button">
       <div className="border border-white relative w-full max-w-[143px] aspect-square">
+        <Modal open={openSuccess} title="Payment Success!🎉" onOpenChange={setOpenSuccess}>
+          <img
+            src={data?.media?.[0]?.gateway || "https://placehold.co/143x143"}
+            alt={data?.title}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "https://placehold.co/143x143";
+            }}
+            onLoad={() => setLoadingImage(false)}
+            className="w-full max-w-[143px] aspect-square mx-auto mt-8"
+          />
+
+          <div className="flex justify-center mt-6">
+            <Badge
+              variant={"outline"}
+              className={cn("bg-background/30 text-[#F59D0B] border-[#F59D0B]", {
+                "opacity-30": !price,
+              })}
+            >
+              {price ? `${price} ETH` : "Not listed"}
+            </Badge>
+          </div>
+          <Button className="w-full mt-6">Close</Button>
+        </Modal>
         {loadingImage && (
           <motion.div
-            className="w-full max-w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0"
+            className="w-full max-w-[143px] aspect-square flex flex-col items-center justify-center absolute inset-0 mx-auto"
             exit={{ opacity: 0 }}
           >
             <Loader2 className="animate-spin" />
@@ -165,6 +193,7 @@ export default function CardNft({
           onLoad={() => setLoadingImage(false)}
           className="w-full aspect-square"
         />
+
       </div>
 
       <div className="flex justify-center">

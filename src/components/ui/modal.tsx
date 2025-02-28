@@ -39,7 +39,7 @@ export function Modal({ children, title, description, open, onOpenChange }: { ch
         <Drawer open={open} onOpenChange={onOpenChange}>
             <DrawerContent>
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>{title}</DrawerTitle>
+                    <DrawerTitle className="text-center">{title}</DrawerTitle>
                     {!!description && <DrawerDescription>
                         {description}
                     </DrawerDescription>}
