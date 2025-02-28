@@ -117,10 +117,6 @@ export default function CardNft({
   useEffect(() => {
     if (isSuccess) {
       setOpenSuccess(true)
-      queryClient.invalidateQueries({
-        queryKey: ['nfts'],
-        exact: false
-      })
     }
   }, [isSuccess])
 
@@ -146,11 +142,19 @@ export default function CardNft({
     }
   }, [isLoading]);
 
+  function handleCloseSuccess() {
+    setOpenSuccess(false)
+
+    queryClient.invalidateQueries({
+      queryKey: ['nfts'],
+      exact: false
+    })
+  }
 
   return (
     <div className="nft-card" role="button">
       <div className="border border-white relative w-full max-w-[143px] aspect-square">
-        <Modal open={openSuccess} title="Payment Success!🎉" onOpenChange={setOpenSuccess}>
+        <Modal open={openSuccess} title="Payment Success!🎉" onOpenChange={handleCloseSuccess}>
           <img
             src={data?.media?.[0]?.gateway || "https://placehold.co/143x143"}
             alt={data?.title}
