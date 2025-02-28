@@ -48,7 +48,7 @@ export default function CardNft({
   const { convertWei, convertTokenIdNft } = useCurrency();
 
   const [loadingImage, setLoadingImage] = useState(true);
-  const [openSuccess, setOpenSuccess] = useState(true);
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   const queryClient = useQueryClient();
 
