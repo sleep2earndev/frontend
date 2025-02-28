@@ -17,6 +17,7 @@ import IconWallet from "@/components/icon/wallet";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface NftData {
   metadata?: {
@@ -44,6 +45,9 @@ export default function CardNft({
 }) {
   const { setLoading } = useLoading();
   const { convertWei, convertTokenIdNft } = useCurrency();
+
+  const queryClient = useQueryClient();
+
 
   const tokenId = useMemo(() => {
     if (data.id) {
@@ -79,6 +83,7 @@ export default function CardNft({
     isError: isErrorTransaction,
     error: errorTransaction,
     isLoading,
+    isSuccess
   } = useWaitForTransactionReceipt({
     hash,
     retryCount: 0,
@@ -104,6 +109,15 @@ export default function CardNft({
     Number((priceContract as any)?.[0]?.price || 0),
     18
   );
+
+  useEffect(() => {
+    if(isSuccess) {
+      queryClient.invalidateQueries({
+        queryKey: ['nfts'],
+        exact: false
+      })
+    }
+  }, [isSuccess])
 
   useEffect(() => {
     if (isErrorTransaction) {
