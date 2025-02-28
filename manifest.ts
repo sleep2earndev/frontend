@@ -3,8 +3,8 @@ const manifestForPlugIn = {
   registerType: "prompt" as const,
   includeAssests: ["favicon.ico", "apple-touc-icon.png", "masked-icon.svg"],
   manifest: {
-    name: "Snoorefi",
-    short_name: "Snoorefi",
+    name: "Sleep2Earn",
+    short_name: "Sleep2Earn",
     description: "Take Sleep, Get Paid",
     icons: [
       {

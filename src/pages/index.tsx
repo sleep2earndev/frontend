@@ -36,7 +36,7 @@ export default function LandingPage() {
             Web3 Sleep-to-Earn Platform
           </Badge>
           <h1 className="text-4xl font-bold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Snoorefi: Get Rewarded for a Good Night's Rest!
+            Sleep2Earn: Get Rewarded for a Good Night's Rest!
           </h1>
           <p className="mx-auto max-w-[700px] text-lg text-gray-300 md:text-xl">
             Sleep better, earn more. A Web3-powered Sleep-to-Earn platform.
@@ -228,7 +228,7 @@ export default function LandingPage() {
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <p className="text-sm text-gray-500">
-              © 2025 Snoorefi. All rights reserved.
+              © 2025 Sleep2Earn. All rights reserved.
             </p>
             <div className="flex gap-6">
               <NavLink
