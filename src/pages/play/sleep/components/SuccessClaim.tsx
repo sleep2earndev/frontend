@@ -9,11 +9,14 @@ import { SLEEP_DATA, useSleep } from "@/hooks/sleep-provider"
 import { useNavigate } from "react-router"
 import FadeWrapper from "@/components/animation/fade"
 import useLeaveConfirmation from "@/hooks/use-leave-confirmation"
+import useCurrency from "@/hooks/useCurrency"
 
 export default function SuccessClaim() {
     const navigate = useNavigate()
     const { data, clearData, setStep } = useSleep()
     const [isAnimating, setIsAnimating] = useState(true)
+
+    const { fromWeiToEth } = useCurrency()
 
     useLeaveConfirmation({
         isBlocked: true
@@ -45,9 +48,10 @@ export default function SuccessClaim() {
     }
 
     const formatETHForUI = (value: number) => {
-        return value < 0.00000001
+        const _value = fromWeiToEth(value)
+        return _value < 0.00000001
             ? "< 0.00000001" // Batas bawah tampilan UI
-            : value.toFixed(10);
+            : _value.toFixed(10);
     };
 
     return (
@@ -114,7 +118,7 @@ export default function SuccessClaim() {
                                             transition={{ delay: 0.8, duration: 0.5 }}
                                             className="text-xs text-white/40 mt-1"
                                         >
-                                            {data?.earning.toString()}
+                                            {fromWeiToEth(data?.earning).toFixed(18)}
                                         </motion.span>
                                     </div>
                                     <motion.div

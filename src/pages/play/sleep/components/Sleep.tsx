@@ -56,7 +56,6 @@ export default function Sleep() {
     query: {
       retryOnMount: false,
     },
-
   });
 
   const selectedNFT = useMemo<NftData | null>(() => {
@@ -76,6 +75,7 @@ export default function Sleep() {
       if (!data.success || !data.earn) {
         setLoading(false)
         setStep('failed')
+        setOpenNotifWallet(false)
         return
       }
       setOpenNotifWallet(true)
@@ -93,6 +93,7 @@ export default function Sleep() {
       toast.error('Get earning data failed, please try again')
       swipeRef.current?.reset?.()
       setLoading(false)
+      setOpenNotifWallet(false)
     }
   })
 
