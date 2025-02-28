@@ -2,8 +2,6 @@ import FadeWrapper from '@/components/animation/fade'
 import { Crown, Medal, Trophy } from "lucide-react"
 import { motion } from "motion/react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
 interface LeaderboardEntry {
   rank: number
   name: string
@@ -118,7 +116,7 @@ export default function LeaderBoardPage() {
   const restOfBoard = leaderboardData.slice(3)
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#061029] bg-gradient-to-b from-background to-background/95 p-4 text-white">
+    <FadeWrapper className="flex flex-1 flex-col items-center justify-center bg-[#061029] bg-gradient-to-b from-background to-background/95 p-4 text-white">
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -252,6 +250,6 @@ export default function LeaderBoardPage() {
           ))}
         </div>
       </motion.div>
-    </div>
+    </FadeWrapper>
   )
 }
