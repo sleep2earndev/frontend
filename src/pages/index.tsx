@@ -15,7 +15,7 @@ import { NavLink } from "react-router";
 import { motion } from "motion/react";
 import FadeWrapper from "@/components/animation/fade";
 import { cn } from "@/lib/utils";
-import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+// import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 
 export default function LandingPage() {
@@ -27,7 +27,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <header className="relative flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-center md:px-6 md:py-24 lg:py-32 min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-black to-background/20 opacity-90" />
-        <InteractiveGridPattern
+        {/* <InteractiveGridPattern
           className={cn(
             "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
           )}
@@ -35,7 +35,7 @@ export default function LandingPage() {
           height={80}
           squares={[160, 160]}
           squaresClassName="hover:fill-blue-500"
-        />
+        /> */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
