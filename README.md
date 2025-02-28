@@ -1,50 +1,48 @@
-# React + TypeScript + Vite
+# Sleep2Earn - Web3 Sleep Incentivization App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+Sleep2Earn is a Web3-based application designed to address the issue of sleep deprivation in modern society. By providing token incentives for users who meet predefined sleep goals, Sleep2Earn aims to improve productivity, mental health, and overall well-being. The application also ensures that users' health data remains secure and private.
 
-Currently, two official plugins are available:
+## Installation
+Follow these steps to run this project locally:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone this repository:
+   ```sh
+   git clone https://github.com/sleep2earndev/frontend.git
+   cd sleep2earn
+   ```
 
-## Expanding the ESLint configuration
+2. Create a `.env` file based on `.env.example` and fill in the required configurations.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+3. Install dependencies using one of the following package managers:
+   ```sh
+   pnpm install
+   # or
+   yarn install
+   # or
+   npm install
+   ```
 
-- Configure the top-level `parserOptions` property like this:
+4. Run the application in development mode:
+   ```sh
+   pnpm dev
+   # or
+   yarn dev
+   # or
+   npm run dev
+   ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+5. To build the application:
+   ```sh
+   pnpm build
+   # or
+   yarn build
+   # or
+   npm run build
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Features
+- **Sleep Tracking**: Monitor and record users' sleep patterns.
+- **Token Rewards**: Provide token incentives based on sleep quality.
+- **Privacy-Preserving**: Uses zkTLS technology to protect users' sleep data.
+- **Web3 Integration**: Full support for blockchain and crypto wallets.
