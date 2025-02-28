@@ -10,11 +10,15 @@ import {
   BarChart,
   ArrowRight,
   Users,
+  ChevronRight,
 } from "lucide-react";
 import { NavLink } from "react-router";
 
 import { motion } from "motion/react";
 import FadeWrapper from "@/components/animation/fade";
+import { cn } from "@/lib/utils";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 
 export default function LandingPage() {
   function login() {
@@ -25,16 +29,42 @@ export default function LandingPage() {
       {/* Hero Section */}
       <header className="relative flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-center md:px-6 md:py-24 lg:py-32 min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-black to-background/20 opacity-90" />
-
+        <InteractiveGridPattern
+          className={cn(
+            "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
+          )}
+          width={80}
+          height={80}
+          squares={[160, 160]}
+          squaresClassName="hover:fill-blue-500"
+        />
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className="relative z-10 mx-auto max-w-5xl space-y-8"
         >
-          <Badge className="mb-4 bg-[#1E65FA]/10 text-[#1E65FA] hover:bg-[#1E65FA]/20">
-            Web3 Sleep-to-Earn Platform
-          </Badge>
+          <div className="inline-block">
+            <div className="group relative mx-auto flex items-center justify-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f]">
+              <span
+                className={cn(
+                  "absolute inset-0 block h-full animate-gradient rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]",
+                )}
+                style={{
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "destination-out",
+                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "subtract",
+                  WebkitClipPath: "padding-box",
+                }}
+              />
+              🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
+              <AnimatedGradientText className="text-sm font-medium">
+                Web3 Sleep-to-Earn Platform
+              </AnimatedGradientText>
+            </div>
+          </div>
           <h1 className="text-4xl font-bold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
             Sleep2Earn: Get Rewarded for a Good Night's Rest!
           </h1>
@@ -131,11 +161,11 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div className="relative h-[400px] overflow-hidden rounded-lg lg:h-[500px]">
+            <div className="relative h-[400px] overflow-hidden rounded-lg lg:h-[550px]">
               <img
-                src="https://placehold.co/600x500"
+                src="/leaderboard.gif"
                 alt="Token Economics"
-                className="object-cover"
+                className="object-cover mx-auto"
               />
             </div>
           </div>
