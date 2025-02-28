@@ -1,5 +1,4 @@
 import IconPowerNap from "@/components/icon/power-nap";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -10,7 +9,6 @@ import {
   BarChart,
   ArrowRight,
   Users,
-  ChevronRight,
 } from "lucide-react";
 import { NavLink } from "react-router";
 
