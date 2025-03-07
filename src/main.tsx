@@ -24,7 +24,7 @@ createRoot(document.getElementById("root")!).render(
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <ThemeProvider defaultTheme="dark" storageKey="snoorefi-ui-theme">
+          <ThemeProvider defaultTheme="dark" storageKey="napnad-ui-theme">
             <BrowserRouter>
               <SleepProvider>
                 <LoadingProvider>
