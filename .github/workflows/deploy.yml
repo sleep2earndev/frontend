@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: echo "${{ secrets.ENV_FILE_NAPNAD }}" > .env
         
       - name: Build Project
         run: pnpm run build
