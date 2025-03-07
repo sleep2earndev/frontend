@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: "dist.tar.gz"
-          target: "/deploy/snoorefi/frontend"
+          target: "/deploy/napnad/frontend"
 
       - name: Extract & Restart on VPS
         uses: appleboy/ssh-action@v0.1.10
@@ -52,6 +52,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            cd /deploy/snoorefi/frontend
+            cd /deploy/napnad/frontend
             tar -xzvf dist.tar.gz
             rm dist.tar.gz
