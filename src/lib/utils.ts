@@ -14,3 +14,11 @@ export function getCurrentDate() {
   return `${year}-${month}-${day}`;
 }
 
+export function getAttributes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: { trait_type: string; value: any }[],
+  attrName: string
+) {
+  if (!Array.isArray(data) || (data || []).length < 1) return "";
+  return data.find((attr) => attr.trait_type === attrName)?.value;
+}

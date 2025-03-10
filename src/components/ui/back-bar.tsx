@@ -13,7 +13,7 @@ export default function BackBar() {
       transition={{ duration: 0.3, ease: "easeInOut" }}
       exit={{ y: -200, opacity: 0, transition: { duration: 0.5 } }}
       className={cn("sticky top-0 flex items-center p-4 justify-between")}>
-      <Button variant="secondary" className="text-white" size={'icon'} onClick={() => {navigate(-1)}}>
+      <Button variant="card" className="text-white" size={'icon'} onClick={() => {navigate(-1)}}>
         <ChevronLeft size={24} />
       </Button>
     </motion.div>

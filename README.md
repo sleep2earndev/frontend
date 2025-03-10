@@ -1,15 +1,15 @@
-# Sleep2Earn - Web3 Sleep Incentivization App
+# NapNad - Web3 Sleep Incentivization App
 
 ## Description
-Sleep2Earn is a Web3-based application designed to address the issue of sleep deprivation in modern society. By providing token incentives for users who meet predefined sleep goals, Sleep2Earn aims to improve productivity, mental health, and overall well-being. The application also ensures that users' health data remains secure and private.
+NapNad is a Web3-based application designed to address the issue of sleep deprivation in modern society. By providing token incentives for users who meet predefined sleep goals, NapNad aims to improve productivity, mental health, and overall well-being. The application also ensures that users' health data remains secure and private.
 
 ## Installation
 Follow these steps to run this project locally:
 
 1. Clone this repository:
    ```sh
-   git clone https://github.com/sleep2earndev/frontend.git
-   cd sleep2earn
+   git clone https://github.com/NapNaddev/frontend.git
+   cd NapNad
    ```
 
 2. Create a `.env` file based on `.env.example` and fill in the required configurations.

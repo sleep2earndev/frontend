@@ -29,12 +29,16 @@ export default function BottomBar({ data }: BottomBarProps) {
       transition={{ duration: 0.3, ease: "easeInOut" }}
       exit={{ y: "200%", opacity: 0, transition: { duration: 0.5 } }}
     >
-      <ul className="relative mx-auto flex w-fit rounded-full bg-secondary p-1 border border-white">
+      <ul className="relative mx-auto flex w-fit rounded-full bg-card p-1 border border-white">
         {data.map((item, index) => (
           <NavLink to={item.to} key={`bottombar-item-${index}`}>
-            <Tab key={item.key} setPosition={setPosition} isActive={item.to === pathname}>
-                {item.title}
-              </Tab>
+            <Tab
+              key={item.key}
+              setPosition={setPosition}
+              isActive={item.to === pathname}
+            >
+              {item.title}
+            </Tab>
           </NavLink>
         ))}
 
@@ -43,7 +47,7 @@ export default function BottomBar({ data }: BottomBarProps) {
     </motion.div>
   );
 }
- 
+
 const Tab = ({
   children,
   setPosition,
