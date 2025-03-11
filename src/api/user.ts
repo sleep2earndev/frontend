@@ -16,10 +16,22 @@ export async function getProfile(): Promise<ProfileData> {
   return data;
 }
 
-export async function claimEarn({ startDate, endDate }: { startDate: string, endDate: string }): Promise<{ success: boolean, earn: number, [k: string]: any }> {
-  const response = await backendService<{ success: boolean, earn: number, [k: string]: any }>(`/user/v2/get-earn`, {
-    body: JSON.stringify({ startDate, endDate }),
-    method: 'POST'
+interface PayloadClaimEarn {
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  maxEnergy: number;
+}
+
+export async function claimEarn(payload: PayloadClaimEarn): Promise<{ success: boolean; earn: number; [k: string]: any }> {
+  const response = await backendService<{
+    success: boolean;
+    earn: number;
+    [k: string]: any;
+  }>(`/user/v2/get-earn`, {
+    body: JSON.stringify(payload),
+    method: "POST",
   });
   return response;
 }

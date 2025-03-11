@@ -44,7 +44,7 @@ export function Modal({ children, title, description, open, onOpenChange }: { ch
                         {description}
                     </DrawerDescription>}
                 </DrawerHeader>
-                <div className="p-4">
+                <div className="p-4 max-h-[calc(100vh-20vh)] overflow-auto">
                     {children}
                 </div>
             </DrawerContent>

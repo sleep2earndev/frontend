@@ -8,22 +8,23 @@ import IconMarketplace from "@/components/icon/marketplace";
 import ProfileBar from "@/components/ui/profile-bar";
 import BackBar from "@/components/ui/back-bar";
 import { useSleep } from "@/hooks/sleep-provider";
+import { cn } from "@/lib/utils";
 
 const navbar = [
   {
     title: <IconHome />,
     to: "/play",
-    key: 'home'
+    key: "home",
   },
   {
     title: <IconLeaderboard />,
     to: "/play/competition/leaderboard",
-    key: 'leaderboard'
+    key: "leaderboard",
   },
   {
     title: <IconMarketplace />,
     to: "/play/marketplace",
-    key: 'marketplace'
+    key: "marketplace",
   },
 ];
 
@@ -31,45 +32,53 @@ export default function PlayLayout() {
   const [bottomBarVisible, setBottomBarVisible] = useState(true);
   const [profileHeaderVisible, setProfileHeaderVisible] = useState(true);
   const [backHeaderVisible, setBackHeaderVisible] = useState(false);
+  const [useContainer, setUseContainer] = useState(true);
 
-  const navigate = useNavigate()
-  const { step, data: dataSleep , setStep, clearData} = useSleep()
+  const navigate = useNavigate();
+  const { step, data: dataSleep, setStep, clearData } = useSleep();
 
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname.startsWith('/play/sleep')) {
-      setBottomBarVisible(false)
-      setProfileHeaderVisible(false)
+    if (location.pathname.startsWith("/play/sleep")) {
+      setBottomBarVisible(false);
+      setProfileHeaderVisible(false);
 
-      if (['success', 'failed', 'sleep'].includes(step)) {
-        setBackHeaderVisible(false)
+      if (["success", "failed", "sleep"].includes(step)) {
+        setBackHeaderVisible(false);
       } else {
-        setBackHeaderVisible(true)
+        setBackHeaderVisible(true);
       }
-
     } else {
-      setBottomBarVisible(true)
-      setProfileHeaderVisible(true)
-      setBackHeaderVisible(false)
+      setBottomBarVisible(true);
+      setProfileHeaderVisible(true);
+      setBackHeaderVisible(false);
     }
-  }, [location.pathname, step])
 
-
+    if (location.pathname.startsWith("/play/marketplace")) {
+      setUseContainer(false);
+    } else {
+      setUseContainer(true);
+    }
+  }, [location.pathname, step]);
 
   useEffect(() => {
     if (dataSleep.startTime && !dataSleep.endTime) {
       // open sleep page
-      setStep('sleep')
-      navigate('/play/sleep')
+      setStep("sleep");
+      navigate("/play/sleep");
     } else {
-      clearData()
+      clearData();
     }
-  }, [])
+  }, []);
 
   return (
     <div className="play-layout">
-      <div className="play-layout__container">
+      <div
+        className={cn("play-layout__container", {
+          "max-w-[450px]": useContainer,
+        })}
+      >
         <AnimatePresence>
           {profileHeaderVisible && <ProfileBar />}
           {backHeaderVisible && <BackBar />}
