@@ -40,7 +40,7 @@ export default function NewModalNft({ open, onOpenChange }: ModalNftProps) {
   return (
     <Modal title="Choose your NFT" open={open} onOpenChange={onOpenChange}>
       <div className="relative">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mt-2">
           {(data || []).map((nft, index) => (
             <motion.button
               key={`nft-${nft.id}-${index}`}
