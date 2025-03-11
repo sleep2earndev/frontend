@@ -125,7 +125,10 @@ export default function Sleep() {
     const endDate = getCurrentDate()
     await mutateAsync({
       startDate: data.startTime,
-      endDate: endDate
+      endDate: endDate,
+      startTime: "",
+      endTime: "",
+      maxEnergy: 0
     })
     setData({
       endTime: endDate,

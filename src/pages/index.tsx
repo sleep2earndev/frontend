@@ -17,9 +17,7 @@ import FadeWrapper from "@/components/animation/fade";
 import { cn } from "@/lib/utils";
 // import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { ShinyButton } from "@/components/magicui/shiny-button";
-import { ShineBorder } from "@/components/magicui/shine-border";
 
 export default function LandingPage() {
   function login() {

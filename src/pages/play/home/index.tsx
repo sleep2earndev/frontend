@@ -2,14 +2,14 @@ import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import FadeWrapper from "@/components/animation/fade";
 import { Coins, Star, Timer, Zap } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { NftData } from "@/components/ui/card-nft";
 import { useAccount } from "wagmi";
 import { motion } from "motion/react";
 import Image from "@/components/ui/image";
 import NewModalNft from "@/components/nft/new-modal-nft";
 import { useSleep } from "@/hooks/sleep-provider";
-import { getAIChat } from "@/api/ai";
+import useEnergy from "@/hooks/use-energy";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ export default function HomePage() {
 
   const { address } = useAccount();
 
-  const [energyUsed, setEnergyUsed] = useState(0);
-  const {clearData,setStep} = useSleep()
+  const { energyUsed } = useEnergy();
+  const { clearData, setStep } = useSleep();
 
   const selectedNFT = useMemo<NftData | null>(() => {
     const selected = localStorage.getItem("nft-selected");
@@ -44,17 +44,12 @@ export default function HomePage() {
   }
 
   async function handleStart() {
-    // if (!address) return navigate("/play/wallet");
-    // if (selectedNFT) handleChooseNFT();
-    // clearData()
-    // setStep('choose-category')
+    if (!address) return navigate("/play/wallet");
+    if (selectedNFT) handleChooseNFT();
+    clearData();
+    setStep("choose-category");
     navigate("/play/sleep");
-
-    // const response  = await getAIChat([{role: 'user', content: 'testing'}])
-    // console.log(response)
   }
-
-  
 
   const maxEnergy = attrNFT?.["Energy"] || 2;
   const remainingEnergy = maxEnergy - energyUsed;
