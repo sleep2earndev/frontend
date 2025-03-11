@@ -54,8 +54,6 @@ export default function HomePage() {
   const maxEnergy = attrNFT?.["Energy"] || 0;
   const remainingEnergy = maxEnergy - energyUsed;
 
-  console.log(!!address || !!selectedNFT);
-
   return (
     <FadeWrapper className="p-4 mb-32">
       <NewModalNft open={openModal} onOpenChange={setOpenModal} />
