@@ -1,22 +1,24 @@
-import IconEnergy from "@/components/icon/energy";
-import IconPlus from "@/components/icon/plus";
-import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import FadeWrapper from "@/components/animation/fade";
-import { HandCoins, InfoIcon, Loader2, RefreshCcw } from "lucide-react";
-import { useMemo, useState } from "react";
-import ModalNft from "@/components/nft/modal-nft";
+import { Coins, Star, Timer, Zap } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { NftData } from "@/components/ui/card-nft";
 import { useAccount } from "wagmi";
 import { motion } from "motion/react";
+import Image from "@/components/ui/image";
+import NewModalNft from "@/components/nft/new-modal-nft";
+import { useSleep } from "@/hooks/sleep-provider";
+import { getAIChat } from "@/api/ai";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
   const { address } = useAccount();
+
+  const [energyUsed, setEnergyUsed] = useState(0);
+  const {clearData,setStep} = useSleep()
 
   const selectedNFT = useMemo<NftData | null>(() => {
     const selected = localStorage.getItem("nft-selected");
@@ -32,7 +34,8 @@ export default function HomePage() {
     return selectedNFT?.metadata?.attributes?.reduce((acc, item) => {
       acc[item.trait_type] = item.value;
       return acc;
-    }, {} as { [key: string]: unknown });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, {} as { [key: string]: any });
   }, [selectedNFT]);
 
   function handleChooseNFT() {
@@ -40,95 +43,111 @@ export default function HomePage() {
     setOpenModal(true);
   }
 
-  const [loadingImage, setLoadingImage] = useState(true);
+  async function handleStart() {
+    // if (!address) return navigate("/play/wallet");
+    // if (selectedNFT) handleChooseNFT();
+    // clearData()
+    // setStep('choose-category')
+    navigate("/play/sleep");
+
+    // const response  = await getAIChat([{role: 'user', content: 'testing'}])
+    // console.log(response)
+  }
+
+  
+
+  const maxEnergy = attrNFT?.["Energy"] || 2;
+  const remainingEnergy = maxEnergy - energyUsed;
 
   return (
-    <FadeWrapper className="p-4">
-      <ModalNft open={openModal} onOpenChange={setOpenModal} />
-      <Card className="border-2 border-white">
-        <CardContent>
-          <div className="pt-6">
-            <div className="relative" role="button" onClick={handleChooseNFT}>
-              {selectedNFT ? (
-                <div className="relative">
-                  {loadingImage && (
-                    <motion.div
-                      className="w-full aspect-square flex flex-col items-center justify-center absolute inset-0"
-                      exit={{ opacity: 0 }}
-                    >
-                      <Loader2 className="animate-spin" />
-                    </motion.div>
-                  )}
-                  <img
-                    src={selectedNFT.media?.[0]?.gateway}
-                    className="aspect-square w-full"
-                    title={selectedNFT.title}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      currentTarget.src = "/placeholder.svg";
-                    }}
-                    onLoad={() => setLoadingImage(false)}
-                  />
-                  <Button
-                    size={"icon"}
-                    variant={"outline"}
-                    className="bg-white border-background text-background absolute right-2 bottom-2"
-                    onClick={handleChooseNFT}
-                  >
-                    <RefreshCcw />
-                  </Button>
-                </div>
-              ) : (
-                <div className="p-12 flex justify-center items-center flex-col gap-2">
-                  <IconPlus className="w-12 h-12 text-white/30" />
-                  <p className="text-white/30">Add My Pillow</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <div className="mt-6 flex flex-col gap-5">
-        <div className="flex gap-4">
-          <HandCoins />
-          <div className="flex-1 flex flex-col">
-            <Progress
-              value={attrNFT?.["Max Earn"] ? 100 : 0}
-              classNameIndicator="bg-green-500"
-              text={`${attrNFT?.["Max Earn"] || 0} ETH`}
+    <FadeWrapper className="p-4 mb-32">
+      <NewModalNft open={openModal} onOpenChange={setOpenModal} />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative mb-8"
+      >
+        <div className="group relative overflow-hidden rounded-2xl bg-muted/50 p-1 backdrop-blur-sm">
+          <button
+            onClick={() => setOpenModal(true)}
+            className="relative aspect-square w-full cursor-pointer overflow-hidden rounded-xl transition-transform hover:scale-[0.98] active:scale-95"
+          >
+            <Image
+              src={selectedNFT?.media?.[0]?.gateway || "/placeholder.svg"}
+              alt={selectedNFT?.title}
+              className="h-full w-full object-cover"
             />
-            <div className="flex gap-1.5 items-center mt-1">
-              <InfoIcon className="w-3 h-3 mt-0.5 text-white/60" />
-              <small className="text-xs text-white/50">
-                Max earn for one time sleep
-              </small>
+
+            {/* NFT Name */}
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="rounded-lg bg-black/50 px-3 py-2 text-sm backdrop-blur-sm">
+                {selectedNFT?.title}
+              </div>
             </div>
+
+            {/* Change NFT Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-background/50 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 rounded-2xl">
+              <span className="rounded-lg bg-muted/70 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                Change NFT
+              </span>
+            </div>
+          </button>
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mb-8 space-y-4 mt-8"
+      >
+        {/* Max Earn Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-muted/50 p-4 transition-all hover:bg-muted/70 backdrop-blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative flex items-center gap-4">
+            <div className="rounded-full bg-primary/20 p-3 shadow-neon-purple">
+              <Coins className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-foreground/60">Max Earn</p>
+              <p className="text-lg font-semibold">
+                {attrNFT?.["Max Earn"] || 0} ETH
+              </p>
+            </div>
+            <Star className="h-5 w-5 text-primary opacity-0 transition-opacity group-hover:opacity-100" />
           </div>
         </div>
-        <div className="flex gap-2 items-center">
-          <IconEnergy />
-          <div className="flex-1">
-            <Progress
-              value={attrNFT?.["Energy"] ? 100 : 0}
-              className="text-primary"
-              text={
-                attrNFT?.["Energy"]
-                  ? `${attrNFT?.["Energy"]}/${attrNFT?.["Energy"]}`
-                  : "0/0"
-              }
-            />
+
+        {/* Energy Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-muted/50 p-4 transition-all hover:bg-muted/70 backdrop-blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative flex items-center gap-4">
+            <div className="rounded-full bg-yellow-500/20 p-3 shadow-neon-pink">
+              <Zap className="h-6 w-6 text-yellow-500" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-foreground/60">Energy Available</p>
+                <p className="text-sm font-medium">
+                  {remainingEnergy}/{maxEnergy}
+                </p>
+              </div>
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${(remainingEnergy / maxEnergy) * 100}%`,
+                  }}
+                  transition={{ duration: 1 }}
+                  className="h-full bg-gradient-to-r from-yellow-500 to-yellow-500/80"
+                />
+              </div>
+            </div>
+            <Timer className="h-5 w-5 text-yellow-500 opacity-0 transition-opacity group-hover:opacity-100" />
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="mt-6 flex justify-center">
-        <Button
-          className="text-white"
-          onClick={() => {
-            if (!address) return navigate("/play/wallet");
-            if (selectedNFT) handleChooseNFT();
-            navigate("/play/sleep");
-          }}
-        >
+        <Button size={"lg"} className="w-full" onClick={handleStart}>
           START
         </Button>
       </div>

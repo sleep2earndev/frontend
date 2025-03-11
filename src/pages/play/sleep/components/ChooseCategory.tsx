@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { CategorySleep, useSleep } from "@/hooks/sleep-provider";
+import { Particles } from "@/components/magicui/particles";
 
 const categories = [
   {
@@ -36,6 +37,7 @@ export default function ChooseCategory() {
   return (
     <FadeWrapper className="grid grid-cols-1 gap-4">
       <h2 className="text-2xl font-bold mb-6">Choose Your Categories</h2>
+      
       <AnimatePresence>
         {categories.map((category, index) => (
           <FadeWrapper

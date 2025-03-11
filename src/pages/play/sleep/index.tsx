@@ -1,12 +1,12 @@
 import FadeWrapper from "@/components/animation/fade";
 import ChooseCategory from "@/pages/play/sleep/components/ChooseCategory";
-import {
-  useSleep,
-} from "@/hooks/sleep-provider";
-import ConfirmSleep from "@/pages/play/sleep/components/ConfirmSleep";
-import Sleep from "@/pages/play/sleep/components/Sleep";
-import SuccessClaim from "@/pages/play/sleep/components/SuccessClaim";
+import { useSleep } from "@/hooks/sleep-provider";
+// import ConfirmSleep from "@/pages/play/sleep/components/ConfirmSleep";
 import FailedClaim from "@/pages/play/sleep/components/FailedClaim";
+import NewConfirmSleep from "@/pages/play/sleep/components/NewConfirmSleep";
+import NewSleep from "@/pages/play/sleep/components/NewSleep";
+import NewSuccessClaim from "@/pages/play/sleep/components/NewSuccessClaim";
+import ChatWithAi from "@/pages/play/sleep/components/ChatWithAi";
 
 export default function SleepPage() {
   return (
@@ -23,13 +23,16 @@ function StepComponent({ ...props }: { [k: string]: any }) {
     case "choose-category":
       return <ChooseCategory {...props} />;
     case "confirm":
-      return <ConfirmSleep {...props} />;
+      return <NewConfirmSleep {...props} />;
     case "sleep":
-      return <Sleep {...props} />;
+      return <NewSleep {...props} />;
     case "success":
-      return <SuccessClaim {...props} />
-      case "failed":
-      return <FailedClaim {...props} />
+      return <NewSuccessClaim {...props} />;
+    case "failed":
+      return <FailedClaim {...props} />;
+
+    case "chat-ai":
+      return <ChatWithAi {...props} />;
     default:
       return <ChooseCategory {...props} />;
   }

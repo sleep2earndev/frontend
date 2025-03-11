@@ -17,6 +17,9 @@ import FadeWrapper from "@/components/animation/fade";
 import { cn } from "@/lib/utils";
 // import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
+import { RainbowButton } from "@/components/magicui/rainbow-button";
+import { ShinyButton } from "@/components/magicui/shiny-button";
+import { ShineBorder } from "@/components/magicui/shine-border";
 
 export default function LandingPage() {
   function login() {
@@ -27,15 +30,6 @@ export default function LandingPage() {
       {/* Hero Section */}
       <header className="relative flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-center md:px-6 md:py-24 lg:py-32 min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-black to-background/20 opacity-90" />
-        {/* <InteractiveGridPattern
-          className={cn(
-            "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
-          )}
-          width={80}
-          height={80}
-          squares={[160, 160]}
-          squaresClassName="hover:fill-blue-500"
-        /> */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,7 +40,7 @@ export default function LandingPage() {
             <div className="group relative mx-auto flex items-center justify-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f]">
               <span
                 className={cn(
-                  "absolute inset-0 block h-full animate-gradient rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]",
+                  "absolute inset-0 block h-full animate-gradient rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]"
                 )}
                 style={{
                   WebkitMask:
@@ -64,7 +58,7 @@ export default function LandingPage() {
             </div>
           </div>
           <h1 className="text-4xl font-bold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Sleep2Earn: Get Rewarded for a Good Night's Rest!
+            NapNad: Get Rewarded for a Good Night's Rest!
           </h1>
           <p className="mx-auto max-w-[700px] text-lg text-gray-300 md:text-xl">
             Sleep better, earn more. A Web3-powered Sleep-to-Earn platform.
@@ -91,7 +85,7 @@ export default function LandingPage() {
             Earn tokens while you sleep. It's that simple.
           </p>
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="flex flex-col items-center p-6 text-center">
+            <Card className="flex flex-col items-center p-6 text-center relative">
               <div className="rounded-full bg-primary/10 p-3">
                 <Moon className="h-6 w-6 text-primary" />
               </div>
@@ -230,7 +224,12 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="bg-background px-4 py-16 md:px-6 md:py-24 lg:py-32">
         <div className="container">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br bg-primary p-8 md:p-12 lg:p-16">
+          <div
+            className="relative overflow-hidden rounded-3xl bg-card p-8 md:p-12 lg:p-16"
+            style={{
+              background: 'no-repeat center url("/bg-pattern-abstract.png")',
+            }}
+          >
             <div className="relative z-10 mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-5xl">
                 Start Earning While You Sleep
@@ -239,13 +238,9 @@ export default function LandingPage() {
                 Join thousands of users who are already earning rewards for
                 their sleep habits.
               </p>
-              <Button
-                size="lg"
-                className="mt-8 bg-white text-primary hover:bg-white/90"
-                onClick={login}
-              >
+              <ShinyButton className="mt-8 px-8 py-4" onClick={login}>
                 Get Started Now
-              </Button>
+              </ShinyButton>
             </div>
           </div>
         </div>
@@ -256,7 +251,7 @@ export default function LandingPage() {
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <p className="text-sm text-gray-500">
-              © 2025 Sleep2Earn. All rights reserved.
+              © 2025 NapNad. All rights reserved.
             </p>
             <div className="flex gap-6">
               <NavLink

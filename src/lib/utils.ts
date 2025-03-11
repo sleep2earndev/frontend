@@ -6,11 +6,45 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getCurrentDate() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // Tambah 1 karena bulan dimulai dari 0
-  const day = String(now.getDate()).padStart(2, "0");
+  const date = new Date();
 
-  return `${year}-${month}-${day}`;
+  // Mendapatkan offset timezone dalam menit
+  const timezoneOffset = -date.getTimezoneOffset();
+  const offsetHours = Math.floor(timezoneOffset / 60);
+  const offsetMinutes = timezoneOffset % 60;
+
+  // Format offset ke bentuk ±hh:mm
+  const offsetSign = offsetHours >= 0 ? "+" : "-";
+  const formattedOffset = `${offsetSign}${String(
+    Math.abs(offsetHours)
+  ).padStart(2, "0")}:${String(Math.abs(offsetMinutes)).padStart(2, "0")}`;
+
+  // Format tanggal dengan offset
+  return date.toISOString().replace("Z", formattedOffset);
 }
 
+export function getTimezone() {
+  const date = new Date();
+  const timezoneOffset = -date.getTimezoneOffset() / 60;
+  return `${timezoneOffset >= 0 ? "+" : ""}${timezoneOffset}`;
+}
+
+export const formatTimestamp = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // Konversi ke milidetik
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  return `${day} ${month} ${year} ${hours}:${minutes}`;
+};
+
+export function getAttributes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: { trait_type: string; value: any }[],
+  attrName: string
+) {
+  if (!Array.isArray(data) || (data || []).length < 1) return "";
+  return data.find((attr) => attr.trait_type === attrName)?.value;
+}
