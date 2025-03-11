@@ -22,13 +22,13 @@ export default function HomePage() {
 
   const selectedNFT = useMemo<NftData | null>(() => {
     const selected = localStorage.getItem("nft-selected");
-    if (selected) {
+    if (selected && address) {
       const data = JSON.parse(selected);
       return data as NftData;
     }
 
     return null;
-  }, [openModal]);
+  }, [openModal, address]);
 
   const attrNFT = useMemo(() => {
     return selectedNFT?.metadata?.attributes?.reduce((acc, item) => {
@@ -51,8 +51,10 @@ export default function HomePage() {
     navigate("/play/sleep");
   }
 
-  const maxEnergy = attrNFT?.["Energy"] || 2;
+  const maxEnergy = attrNFT?.["Energy"] || 0;
   const remainingEnergy = maxEnergy - energyUsed;
+
+  console.log(!!address || !!selectedNFT);
 
   return (
     <FadeWrapper className="p-4 mb-32">
@@ -67,18 +69,25 @@ export default function HomePage() {
             onClick={() => setOpenModal(true)}
             className="relative aspect-square w-full cursor-pointer overflow-hidden rounded-xl transition-transform hover:scale-[0.98] active:scale-95"
           >
-            <Image
-              src={selectedNFT?.media?.[0]?.gateway || "/placeholder.svg"}
-              alt={selectedNFT?.title}
-              className="h-full w-full object-cover"
-            />
+            {!!address && !!selectedNFT ? (
+              <>
+                <Image
+                  src={selectedNFT?.media?.[0]?.gateway}
+                  alt={selectedNFT?.title}
+                  className="h-full w-full object-cover"
+                />
 
-            {/* NFT Name */}
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="rounded-lg bg-black/50 px-3 py-2 text-sm backdrop-blur-sm">
-                {selectedNFT?.title}
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="rounded-lg bg-black/50 px-3 py-2 text-sm backdrop-blur-sm">
+                    {selectedNFT?.title}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <p className="text-foreground/60">Click to choose NFT</p>
               </div>
-            </div>
+            )}
 
             {/* Change NFT Overlay */}
             <div className="absolute inset-0 flex items-center justify-center bg-background/50 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 rounded-2xl">
