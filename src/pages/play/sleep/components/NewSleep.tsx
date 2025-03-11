@@ -21,7 +21,6 @@ import Image from "@/components/ui/image";
 import useAlarm from "@/hooks/use-alarm";
 import { parseEther } from "viem";
 import { v4 as uuid } from "uuid";
-import { getAIChat } from "@/api/ai";
 
 const getCategoryDetails = (category: CategorySleep) => {
   switch (category) {
@@ -80,7 +79,7 @@ export default function NewSleep() {
   const { setAlarm, stopAlarm, isAlarmActive } = useAlarm();
   const { setLoading } = useLoading();
   const { profile } = useProfile();
-  const { data, setData, setStep, setChatCoach, chatCoach } = useSleep();
+  const { data, setData, setStep, setChatCoach } = useSleep();
   const [elapsedTime, setElapsedTime] = useState(0); // in seconds
 
   const currentTime = useCurrentTime();

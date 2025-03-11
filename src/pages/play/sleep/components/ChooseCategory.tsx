@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { CategorySleep, useSleep } from "@/hooks/sleep-provider";
-import { Particles } from "@/components/magicui/particles";
 
 const categories = [
   {

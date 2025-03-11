@@ -72,9 +72,9 @@ export const ProfileWrapper = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  // if (location.pathname.startsWith("/play") && isError) {
-  //   return <Navigate to={"/"} replace />;
-  // }
+  if (location.pathname.startsWith("/play") && isError) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return <>{children}</>;
 };

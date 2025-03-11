@@ -16,7 +16,7 @@ interface ModalNftProps {
 
 export default function NewModalNft({ open, onOpenChange }: ModalNftProps) {
   const { address } = useAccount();
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["nfts", address],
     queryFn: () => fetchNFTs(address as string),
     enabled: !!address,

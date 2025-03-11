@@ -18,6 +18,7 @@ import { CategorySleep, useSleep } from "@/hooks/sleep-provider";
 import { Particles } from "@/components/magicui/particles";
 import { getCurrentDate } from "@/lib/utils";
 import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
+import useEnergy from "@/hooks/use-energy";
 
 export default function NewConfirmSleep() {
   const { data, setData, setStep } = useSleep();
@@ -41,6 +42,8 @@ export default function NewConfirmSleep() {
         return 8 * 60;
     }
   };
+
+  const { updateEnergyUsed } = useEnergy();
 
   const [duration, setDuration] = useState(getDefaultDuration());
   const [alarmEnabled, setAlarmEnabled] = useState(true);
@@ -165,6 +168,7 @@ export default function NewConfirmSleep() {
       startTime: getCurrentDate(),
     });
     setStep("sleep");
+    updateEnergyUsed();
   };
 
   return (
