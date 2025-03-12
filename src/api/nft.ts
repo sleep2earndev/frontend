@@ -1,5 +1,4 @@
 import { NftData } from "@/components/nft/card-nft";
-import backendService from "./service";
 
 export async function fetchNFTs(ownerAddress: string): Promise<NftData[]> {
   const url = `${import.meta.env.VITE_RESERVOIR_URL}/users/${ownerAddress}/tokens/v10`;
