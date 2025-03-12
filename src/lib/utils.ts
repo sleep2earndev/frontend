@@ -48,3 +48,11 @@ export function getAttributes(
   if (!Array.isArray(data) || (data || []).length < 1) return "";
   return data.find((attr) => attr.trait_type === attrName)?.value;
 }
+
+
+export function convertIpfsToHttp(url: string, gateway = "https://ipfs.io/ipfs/") {
+  if (url.startsWith("ipfs://")) {
+    return url.replace("ipfs://", gateway);
+  }
+  return url; // Jika bukan IPFS, kembalikan URL asli
+}

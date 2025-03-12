@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { useProfile } from "@/hooks/account-provider";
 import IconEthereum from "@/components/icon/ethereum";
@@ -10,6 +10,7 @@ import { useMemo } from "react";
 export default function ProfileBar() {
   const { profile } = useProfile();
   const { address } = useAccount()
+  const navigate = useNavigate()
 
   const { data, isLoading } = useBalance({
     address: address,
@@ -28,9 +29,9 @@ export default function ProfileBar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       exit={{ y: -200, opacity: 0, transition: { duration: 0.5 } }}
-      className={cn("sticky top-0 flex items-center p-4 justify-between bg-background z-10")}
+      className={cn("sticky top-0 flex items-center p-4 justify-between bg-background/30 z-10 backdrop-blur-sm")}
     >
-      <Avatar>
+      <Avatar onClick={() => navigate('/play/profile')} role="button">
         <AvatarImage src={profile?.extractedParameters?.avatar} />
         <AvatarFallback>{profile?.extractedParameters?.displayName?.[0]}</AvatarFallback>
       </Avatar>

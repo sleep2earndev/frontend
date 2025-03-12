@@ -3,7 +3,7 @@ import { Modal } from "@/components/ui/modal";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import ListNft from "./list-nft";
-import { NftData } from "../ui/card-nft";
+import { type NftData } from "@/components/nft/card-nft";
 
 interface ModalNftProps {
   open: boolean;

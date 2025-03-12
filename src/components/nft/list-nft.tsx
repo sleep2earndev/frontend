@@ -1,6 +1,6 @@
 import FadeWrapper from "@/components/animation/fade";
-import CardNft from "@/components/ui/card-nft";
-import OldCardNft, { NftData } from "@/components/ui/card-nft";
+import CardNft, { type NftData } from "@/components/nft/card-nft";
+import OldCardNft from "@/components/ui/card-nft";
 import { cn } from "@/lib/utils";
 
 export default function ListNft({
