@@ -49,7 +49,7 @@ interface Props extends HTMLMotionProps<"div"> {
   onChoose?: (data: NftData) => void;
 }
 
-export default function CardNft(props: Props) {
+export default function CardNft({onChoose = () => {}, ...props}: Props) {
   const { convertWei } = useCurrency();
 
 
@@ -83,7 +83,7 @@ export default function CardNft(props: Props) {
   );
 
   function handleChoose() {
-    props?.onChoose?.({
+    onChoose?.({
       ...props.data,
       price,
       maxEnergy,

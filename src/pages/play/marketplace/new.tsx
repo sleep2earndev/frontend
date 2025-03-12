@@ -171,7 +171,7 @@ export default function Marketplace() {
         />
 
         {/* NFT Detail Dialog */}
-        <Modal open={!!selectedNFT} onOpenChange={() => setSelectedNFT(null)}>
+        <Modal title="" open={!!selectedNFT} onOpenChange={() => setSelectedNFT(null)}>
           {selectedNFT && (
             <div>
               <div className="relative aspect-video overflow-hidden">
