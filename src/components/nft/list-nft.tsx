@@ -81,7 +81,7 @@ function New({
       {...props}
     >
       {data.map((nft, index) => (
-        <CardNft data={nft} onChoose={onChoose} key={`${nft.id}-${index}`} />
+        <CardNft data={nft} onChoose={onChoose} key={`${nft.token.tokenId}-${index}`} />
       ))}
     </div>
   );
