@@ -5,7 +5,7 @@ import abi from "@/abi/claim.json";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLoading } from "@/components/loading-provider";
 import { useProfile } from "@/hooks/account-provider";
-import { NftData } from "@/components/ui/card-nft";
+import { NftData } from "@/components/nft/card-nft";
 import { CategorySleep, SleepData, useSleep } from "@/hooks/sleep-provider";
 import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
 import useCurrentTime from "@/hooks/use-current-time";
@@ -14,7 +14,7 @@ import { claimEarn } from "@/api/user";
 import { toast } from "sonner";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import { getAttributes, getCurrentDate } from "@/lib/utils";
+import { getCurrentDate } from "@/lib/utils";
 import { motion } from "motion/react";
 import { AlarmClock, Clock, Moon, Sun, Zap } from "lucide-react";
 import Image from "@/components/ui/image";
@@ -200,9 +200,7 @@ export default function NewSleep() {
       startTime,
       endTime,
       maxEnergy:
-        Number(
-          getAttributes(selectedNFT?.metadata?.attributes || [], "Energy")
-        ) || 0,
+        Number(selectedNFT?.maxEnergy) || 0,
     });
     setData({
       endTime: endDate,
@@ -289,11 +287,11 @@ export default function NewSleep() {
           <div className="overflow-hidden rounded-2xl bg-muted/30 p-1 backdrop-blur-sm">
             <div className="relative aspect-square overflow-hidden rounded-xl">
               <Image
-                src={selectedNFT?.media?.[0]?.gateway}
+                src={selectedNFT?.token?.image}
                 className="h-full w-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-4">
-                <h3 className="font-medium">{selectedNFT?.title}</h3>
+                <h3 className="font-medium">{selectedNFT?.token?.name}</h3>
               </div>
             </div>
           </div>

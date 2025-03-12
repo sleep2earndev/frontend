@@ -49,7 +49,7 @@ interface Props extends HTMLMotionProps<"div"> {
   onChoose?: (data: NftData) => void;
 }
 
-export default function CardNft({onChoose = () => {}, ...props}: Props) {
+export default function CardNft({ onChoose = () => { }, ...props }: Props) {
   const { convertWei } = useCurrency();
 
 
@@ -70,7 +70,13 @@ export default function CardNft({onChoose = () => {}, ...props}: Props) {
       const url = convertIpfsToHttp(props.data.token.metadata.tokenURI)
       return fetchAttributes(url)
     },
-    enabled: !!props.data.token.metadata?.tokenURI
+    enabled: !!props.data.token.metadata?.tokenURI,
+    refetchOnMount: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    retry: false,
   })
 
   const maxEnergy = getAttributes(metadata?.attributes || [], 'Max Earn')
