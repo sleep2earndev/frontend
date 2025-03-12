@@ -30,11 +30,6 @@ export default function HomePage() {
     return null;
   }, [openModal, address]);
 
-  const attrNFT = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return {} as any
-  }, [selectedNFT]);
-
   function handleChooseNFT() {
     if (!address) return navigate("/play/wallet");
     setOpenModal(true);
@@ -48,8 +43,9 @@ export default function HomePage() {
     navigate("/play/sleep");
   }
 
-  const maxEnergy = attrNFT?.["Energy"] || 0;
+  const maxEnergy = selectedNFT?.maxEnergy || 0;
   const remainingEnergy = maxEnergy - energyUsed;
+
 
   return (
     <FadeWrapper className="p-4 mb-32">
@@ -109,7 +105,7 @@ export default function HomePage() {
             <div className="flex-1">
               <p className="text-sm text-foreground/60">Max Earn</p>
               <p className="text-lg font-semibold">
-                {attrNFT?.["Max Earn"] || 0} ETH
+                {selectedNFT?.maxEarn || 0} ETH
               </p>
             </div>
             <Star className="h-5 w-5 text-primary opacity-0 transition-opacity group-hover:opacity-100" />
