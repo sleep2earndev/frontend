@@ -28,7 +28,7 @@ export default function ProfileBar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       exit={{ y: -200, opacity: 0, transition: { duration: 0.5 } }}
-      className={cn("sticky top-0 flex items-center p-4 justify-between bg-background z-10")}
+      className={cn("sticky top-0 flex items-center p-4 justify-between bg-background/30 z-10 backdrop-blur-sm")}
     >
       <Avatar>
         <AvatarImage src={profile?.extractedParameters?.avatar} />

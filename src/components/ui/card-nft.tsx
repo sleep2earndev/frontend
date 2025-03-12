@@ -18,22 +18,8 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Modal } from "./modal";
-
-export interface NftData {
-  metadata?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    attributes?: { trait_type: string; value: any }[];
-  };
-  contract?: {
-    address?: string;
-  };
-  id?: {
-    tokenId?: string;
-  };
-  media?: { gateway?: string }[];
-  title?: string;
-}
+import { Modal } from "@/components/ui/modal";
+import { NftData } from "@/components/nft/card-nft";
 
 export default function CardNft({
   data,
@@ -45,19 +31,15 @@ export default function CardNft({
   onChoose?: (data: NftData) => void;
 }) {
   const { setLoading } = useLoading();
-  const { convertWei, convertTokenIdNft } = useCurrency();
+  const { convertWei } = useCurrency();
 
   const [loadingImage, setLoadingImage] = useState(true);
   const [openSuccess, setOpenSuccess] = useState(false);
 
   const queryClient = useQueryClient();
 
-
   const tokenId = useMemo(() => {
-    if (data.id) {
-      return convertTokenIdNft(data?.id?.tokenId as string);
-    }
-    return;
+    return data.token?.tokenId;
   }, [data]);
 
   const { data: priceContract, isLoading: isLoadingPrice } = useReadContract({
@@ -67,12 +49,8 @@ export default function CardNft({
     args: [[tokenId]],
   });
 
-  const maxEnergy = data?.metadata?.attributes?.find(
-    (attr) => attr.trait_type === "Energy"
-  )?.value;
-  const maxEarn = data?.metadata?.attributes?.find(
-    (attr) => attr.trait_type === "Max Earn"
-  )?.value;
+  const maxEnergy = 0
+  const maxEarn = 0
 
   const {
     writeContract,
@@ -156,8 +134,8 @@ export default function CardNft({
       <div className="border border-white relative w-full max-w-[143px] aspect-square">
         <Modal open={openSuccess} title="Payment Success!🎉" onOpenChange={handleCloseSuccess}>
           <img
-            src={data?.media?.[0]?.gateway || "https://placehold.co/143x143"}
-            alt={data?.title}
+            src={data.token?.image}
+            alt={data.token?.name}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
               currentTarget.src = "https://placehold.co/143x143";
@@ -188,8 +166,8 @@ export default function CardNft({
         )}
 
         <img
-          src={data?.media?.[0]?.gateway || "https://placehold.co/143x143"}
-          alt={data?.title}
+          src={data.token?.image}
+          alt={data.token?.name}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = "https://placehold.co/143x143";

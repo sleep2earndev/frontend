@@ -17,9 +17,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchNFTs } from "@/api/nft";
 import ListNft from "@/components/nft/list-nft";
-import { getAttributes } from "@/lib/utils";
 import FadeWrapper from "@/components/animation/fade";
-import useCurrency from "@/hooks/useCurrency";
 import abi from "@/abi/sleepnft.json";
 import { parseEther } from "viem";
 import { toast } from "sonner";
@@ -27,20 +25,20 @@ import { useLoading } from "@/components/loading-provider";
 
 export default function Marketplace() {
   const [selectedNFT, setSelectedNFT] = useState<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (NftData & { energy?: any; maxEarn?: any }) | null
+     
+    (NftData) | null
   >(null);
   const [searchQuery, setSearchQuery] = useState("");
   // const [sortBy, setSortBy] = useState("price-low");
   // const [isPurchasing, setIsPurchasing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [purchasedNFT, setPurchasedNFT] = useState<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (NftData & { energy?: any; maxEarn?: any }) | null
+     
+    (NftData) | null
   >(null);
   const { setLoading } = useLoading();
 
-  const { convertTokenIdNft } = useCurrency();
+
   const navigate = useNavigate();
 
   const { address } = useAccount();
@@ -79,7 +77,7 @@ export default function Marketplace() {
 
   const filteredNFTs = (data || [])?.filter((nft) => {
     const matchesSearch =
-      nft.title || "".toLowerCase().includes(searchQuery.toLowerCase());
+      nft.token.name || "".toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesSearch;
   });
@@ -87,13 +85,12 @@ export default function Marketplace() {
   function handleChoose(nft: NftData) {
     setSelectedNFT({
       ...nft,
-      maxEarn: getAttributes(nft.metadata?.attributes || [], "Max Earn"),
-      energy: getAttributes(nft.metadata?.attributes || [], "Energy"),
     });
   }
 
   const handlePurchase = async (nft: NftData) => {
-    const tokenId = convertTokenIdNft(nft?.id?.tokenId as string);
+    // const tokenId = convertTokenIdNft(nft?.id?.tokenId as string);
+    const tokenId = nft.token.tokenId
     writeContract({
       abi,
       address: import.meta.env.VITE_ADDRESS_NFT as `0x${string}`,
@@ -135,7 +132,7 @@ export default function Marketplace() {
   }
 
   return (
-    <FadeWrapper className="min-h-screen bg-background text-foreground">
+    <FadeWrapper className="min-h-screen bg-background text-foreground mb-32">
       {/* Background Effects */}
       <div className="fixed inset-0">
         <div className="absolute inset-0 bg-gradient-radial from-background/80 via-background to-background/95" />
@@ -144,7 +141,7 @@ export default function Marketplace() {
         <div className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-secondary/5 blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8">
+      <div className="relative z-[1] mx-auto max-w-7xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Marketplace</h1>
@@ -179,11 +176,14 @@ export default function Marketplace() {
             <div>
               <div className="relative aspect-video overflow-hidden">
                 <Image
-                  src={selectedNFT.media?.[0]?.gateway}
-                  alt={selectedNFT.title}
+                  src={selectedNFT.token?.image}
+                  alt={selectedNFT.token?.name}
                   className="h-full w-full object-cover rounded-lg"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent" />
+                <div className="absolute bottom-0 w-full p-6">
+                  <h2 className="text-2xl font-bold">{selectedNFT.token?.name}</h2>
+                </div>
               </div>
 
               <div>
@@ -203,7 +203,7 @@ export default function Marketplace() {
                     </div>
                     <div className="flex items-center gap-2 text-lg font-semibold text-yellow-500">
                       <Zap className="h-5 w-5" />
-                      {selectedNFT.energy}
+                      {selectedNFT.maxEnergy}
                     </div>
                   </div>
                 </div>
@@ -211,13 +211,13 @@ export default function Marketplace() {
                 <div className="mb-6">
                   <div className="mb-2 text-sm text-foreground/60">Seller</div>
                   <div className="rounded-lg bg-muted/50 px-3 py-2 font-mono text-sm backdrop-blur-sm">
-                    {selectedNFT.contract?.address}
+                    {selectedNFT.token?.contract}
                   </div>
                 </div>
 
                 <div className="flex items-end justify-between">
                   <div>
-                    <div className="text-sm text-foreground/60">Price</div>
+                    <div className="text-sm text-foreground/60 mb-2">Price</div>
                     <div className="flex items-center gap-2 text-2xl font-bold">
                       <div className="bg-white rounded-full p-1 border border-background">
                         <IconEthereum className="h-6 w-6" />
@@ -271,7 +271,7 @@ export default function Marketplace() {
                     className="text-foreground/60"
                   >
                     You are now the proud owner of <br />
-                    {purchasedNFT.title}
+                    {purchasedNFT.token.name}
                   </motion.p>
                 </div>
 
@@ -283,12 +283,12 @@ export default function Marketplace() {
                 >
                   <div className="flex items-start gap-4">
                     <Image
-                      src={purchasedNFT.media?.[0]?.gateway}
-                      alt={purchasedNFT.title}
+                      src={purchasedNFT?.token?.image}
+                      alt={purchasedNFT.token.name}
                       className="h-24 w-24 rounded-lg object-cover"
                     />
                     <div className="flex-1">
-                      <h3 className="mb-1 font-medium">{purchasedNFT.title}</h3>
+                      <h3 className="mb-1 font-medium">{purchasedNFT.token.name}</h3>
                       <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-1 text-primary">
                           <Coins className="h-4 w-4" />
@@ -296,7 +296,7 @@ export default function Marketplace() {
                         </div>
                         <div className="flex items-center gap-1 text-secondary">
                           <Zap className="h-4 w-4" />
-                          {purchasedNFT.energy}
+                          {purchasedNFT.maxEnergy}
                         </div>
                       </div>
                     </div>

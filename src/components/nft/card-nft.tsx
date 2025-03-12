@@ -7,22 +7,41 @@ import { useMemo } from "react";
 import { Coins, Zap } from "lucide-react";
 import useCurrency from "@/hooks/useCurrency";
 import LoadingDots from "../ui/loading-dots";
-import { getAttributes } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAttributes } from "@/api/nft";
+import { cn, convertIpfsToHttp, getAttributes } from "@/lib/utils";
 
 export interface NftData {
-  metadata?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    attributes?: { trait_type: string; value: any }[];
-  };
-  contract?: {
-    address?: string;
-  };
-  id?: {
-    tokenId?: string;
-  };
-  media?: { gateway?: string }[];
-  title?: string;
-  price?: number;
+  token: {
+    contract: string,
+    tokenId: string,
+    name: string,
+    image: string,
+    imageSmall: string,
+    imageLarge: string,
+    metadata: {
+      imageOriginal: string,
+      imageMimeType: string,
+      tokenURI: string
+    },
+  }
+  ownership: {
+    tokenCount: string
+    onSaleCount: string
+    floorAsk: {
+      id: unknown,
+      price: unknown,
+      maker: unknown,
+      kind: unknown,
+      validFrom: unknown,
+      validUntil: unknown,
+      source: unknown
+    },
+    acquiredAt: string
+  },
+  price?: number,
+  maxEnergy?: number,
+  maxEarn?: number
 }
 
 interface Props extends HTMLMotionProps<"div"> {
@@ -31,13 +50,11 @@ interface Props extends HTMLMotionProps<"div"> {
 }
 
 export default function CardNft(props: Props) {
-  const { convertWei, convertTokenIdNft } = useCurrency();
+  const { convertWei } = useCurrency();
+
 
   const tokenId = useMemo(() => {
-    if (props.data?.id) {
-      return convertTokenIdNft(props.data?.id?.tokenId as string);
-    }
-    return;
+    return props.data.token.tokenId;
   }, [props.data]);
 
   const { data: priceContract, isLoading: isLoadingPrice } = useReadContract({
@@ -47,14 +64,17 @@ export default function CardNft(props: Props) {
     args: [[tokenId]],
   });
 
-  const maxEnergy = getAttributes(
-    props.data.metadata?.attributes || [],
-    "Energy"
-  );
-  const maxEarn = getAttributes(
-    props.data.metadata?.attributes || [],
-    "Max Earn"
-  );
+  const { data: metadata, isPending: isPendingMetadata } = useQuery({
+    queryKey: ['attributes', props.data.token.tokenId],
+    queryFn: () => {
+      const url = convertIpfsToHttp(props.data.token.metadata.tokenURI)
+      return fetchAttributes(url)
+    },
+    enabled: !!props.data.token.metadata?.tokenURI
+  })
+
+  const maxEnergy = getAttributes(metadata?.attributes || [], 'Max Earn')
+  const maxEarn = getAttributes(metadata?.attributes || [], 'Energy')
 
   const price = convertWei(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +86,8 @@ export default function CardNft(props: Props) {
     props?.onChoose?.({
       ...props.data,
       price,
+      maxEnergy,
+      maxEarn
     });
   }
 
@@ -81,11 +103,14 @@ export default function CardNft(props: Props) {
       <div className="overflow-hidden rounded-xl bg-muted/50 p-1 backdrop-blur-sm">
         <div className="relative aspect-square overflow-hidden rounded-lg">
           <Image
-            src={props.data?.media?.[0]?.gateway}
-            alt={props.data?.title}
+            src={props.data.token.image}
+            alt={props.data.token.name}
             className="h-full w-full object-cover transition-transform group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+          <div className="absolute bottom-0 w-full p-4">
+            <h3 className="text-lg font-semibold">{props.data.token.name}</h3>
+          </div>
         </div>
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">
@@ -103,12 +128,16 @@ export default function CardNft(props: Props) {
           </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-1 text-primary">
-              <Coins className="h-4 w-4" />
-              {maxEarn} ETH
+              <Coins className={cn("h-4 w-4", {
+                'text-gray-500': isPendingMetadata
+              })} />
+              {isPendingMetadata ? <LoadingDots /> : `${maxEarn} ETH`}
             </div>
             <div className="flex items-center gap-1 text-yellow-500">
-              <Zap className="h-4 w-4" />
-              {maxEnergy}
+              <Zap className={cn("h-4 w-4", {
+                'text-gray-500': isPendingMetadata
+              })} />
+              {isPendingMetadata ? <LoadingDots /> : maxEnergy}
             </div>
           </div>
         </div>

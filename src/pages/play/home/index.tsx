@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import FadeWrapper from "@/components/animation/fade";
 import { Coins, Star, Timer, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
-import { NftData } from "@/components/ui/card-nft";
+import { type NftData } from "@/components/nft/card-nft";
 import { useAccount } from "wagmi";
 import { motion } from "motion/react";
 import Image from "@/components/ui/image";
@@ -31,11 +31,8 @@ export default function HomePage() {
   }, [openModal, address]);
 
   const attrNFT = useMemo(() => {
-    return selectedNFT?.metadata?.attributes?.reduce((acc, item) => {
-      acc[item.trait_type] = item.value;
-      return acc;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, {} as { [key: string]: any });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return {} as any
   }, [selectedNFT]);
 
   function handleChooseNFT() {
@@ -70,14 +67,14 @@ export default function HomePage() {
             {!!address && !!selectedNFT ? (
               <>
                 <Image
-                  src={selectedNFT?.media?.[0]?.gateway}
-                  alt={selectedNFT?.title}
+                  src={selectedNFT?.token?.image}
+                  alt={selectedNFT?.token?.name}
                   className="h-full w-full object-cover"
                 />
 
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="rounded-lg bg-black/50 px-3 py-2 text-sm backdrop-blur-sm">
-                    {selectedNFT?.title}
+                    {selectedNFT?.token?.name}
                   </div>
                 </div>
               </>
@@ -149,7 +146,7 @@ export default function HomePage() {
         </div>
       </motion.div>
       <div className="mt-6 flex justify-center">
-        <Button size={"lg"} className="w-full" onClick={handleStart}>
+        <Button size={"lg"} className="w-full px-8 py-6 text-lg" onClick={handleStart}>
           START
         </Button>
       </div>
