@@ -1,4 +1,4 @@
-import { fetchNFTs } from "@/api/nft";
+import { fetchAttributes, fetchNFTs } from "@/api/nft";
 import { Modal } from "@/components/ui/modal";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
@@ -7,6 +7,8 @@ import { NftData } from "@/components/nft/card-nft";
 import Image from "../ui/image";
 import { useMemo } from "react";
 import { Check } from "lucide-react";
+import { convertIpfsToHttp, getAttributes } from "@/lib/utils";
+import { useLoading } from "../loading-provider";
 
 interface ModalNftProps {
   open: boolean;
@@ -15,6 +17,7 @@ interface ModalNftProps {
 }
 
 export default function NewModalNft({ open, onOpenChange }: ModalNftProps) {
+  const { setLoading } = useLoading()
   const { address } = useAccount();
   const { data } = useQuery({
     queryKey: ["nfts", address],
@@ -32,8 +35,18 @@ export default function NewModalNft({ open, onOpenChange }: ModalNftProps) {
     return null;
   }, [open]);
 
-  function onChoose(data: NftData) {
-    localStorage.setItem("nft-selected", JSON.stringify(data));
+
+  async function onChoose(data: NftData) {
+    setLoading(true)
+    const url = convertIpfsToHttp(data.token.metadata.tokenURI)
+    const metadata = await fetchAttributes(url)
+    
+    localStorage.setItem("nft-selected", JSON.stringify({
+      ...data,
+      maxEarn: getAttributes(metadata?.attributes || [], 'Max Earn') || 0,
+      maxEnergy: getAttributes(metadata?.attributes || [], 'Energy') || 0
+    } as NftData));
+    setLoading(false)
     onOpenChange(false);
   }
 
@@ -47,11 +60,10 @@ export default function NewModalNft({ open, onOpenChange }: ModalNftProps) {
               onClick={() => {
                 onChoose(nft);
               }}
-              className={`group relative overflow-hidden rounded-xl bg-muted/50 p-1 transition-all hover:bg-muted/70 ${
-                selectedNFT?.token?.tokenId === nft.token?.tokenId
+              className={`group relative overflow-hidden rounded-xl bg-muted/50 p-1 transition-all hover:bg-muted/70 ${selectedNFT?.token?.tokenId === nft.token?.tokenId
                   ? "ring-2 ring-primary shadow-neon-purple"
                   : ""
-              }`}
+                }`}
             >
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 <Image

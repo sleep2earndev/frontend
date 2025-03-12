@@ -9,7 +9,7 @@ import abi from "@/abi/claim.json";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLoading } from "@/components/loading-provider";
 import { useProfile } from "@/hooks/account-provider";
-import { NftData } from "@/components/ui/card-nft";
+import { NftData } from "@/components/nft/card-nft";
 import { Badge } from "@/components/ui/badge";
 import { SLEEP_DATA, useSleep } from "@/hooks/sleep-provider";
 import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
@@ -180,7 +180,7 @@ export default function Sleep() {
               <CardContent>
                 <div className="pt-6">
                   <div className="flex justify-center items-center flex-col gap-2">
-                    <img src={selectedNFT?.media?.[0]?.gateway} />
+                    <img src={selectedNFT?.token?.image} />
                   </div>
                 </div>
               </CardContent>
