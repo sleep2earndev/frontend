@@ -44,7 +44,7 @@ const useAlarm = () => {
     setIsAlarmCalled(false)
   };
 
-  return { setAlarm, stopAlarm, isAlarmActive, isAlarmCalled };
+  return { setAlarm, stopAlarm, isAlarmActive, isAlarmCalled, playAlarm };
 };
 
 export default useAlarm;
