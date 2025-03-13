@@ -64,23 +64,15 @@ const formatTime = (date: Date) => {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
-// Format elapsed time as HH:MM:SS
-const formatElapsedTime = (seconds: number) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-};
 
 export default function NewSleep() {
+
   const { setAlarm, stopAlarm, isAlarmCalled } = useAlarm();
   const { setLoading } = useLoading();
   const { profile } = useProfile();
   const { data, setData, setStep, setChatCoach } = useSleep();
-  const [elapsedTime, setElapsedTime] = useState(0); // in seconds
+  const [elapsedTime, setElapsedTime] = useState("00:00:00");
+
 
   const currentTime = useCurrentTime();
   const categoryDetails = getCategoryDetails(data.category as CategorySleep);
@@ -159,16 +151,21 @@ export default function NewSleep() {
       swipeRef.current?.reset?.();
       setLoading(false);
       setOpenNotifWallet(false);
+
+      if(error.message === 'insufient energy') {
+        setStep("failed");
+      }
     },
   });
 
   function claimReward(weiAmount: number) {
-    const _weiAmount = parseEther(`${weiAmount}`);
+    const _weiAmount = parseEther(weiAmount.toFixed());
+
     writeContract({
       abi,
       address: import.meta.env.VITE_ADDRESS_CLAIM,
       functionName: "claimReward",
-      args: [_weiAmount],
+      args: [true, _weiAmount],
     });
   }
 
@@ -182,19 +179,36 @@ export default function NewSleep() {
 
   const formatDateTime = (isoString: string) => {
     const date = new Date(isoString);
-
-    const datePart = date.toISOString().split("T")[0]; // "2025-03-11"
-    const timePart = date.toISOString().split("T")[1].slice(0, 5); // "05:53"
-
+  
+    // Format tanggal dalam format YYYY-MM-DD
+    const datePart = date.toLocaleDateString("sv-SE"); // "2025-03-11"
+  
+    // Format jam dalam format HH:mm (24 jam)
+    const timePart = date.toLocaleTimeString("sv-SE", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  
     return { date: datePart, time: timePart };
   };
 
   async function handleClaim() {
     stopAlarm();
+    if(data.endTime) {
+      const _weiAmount = parseEther(data.earning.toFixed());
+      return writeContract({
+        abi,
+        address: import.meta.env.VITE_ADDRESS_CLAIM,
+        functionName: "claimReward",
+        args: [_weiAmount],
+      });
+    }
     setLoading(true);
     const endDateIso = getCurrentDate();
     const { date: startDate, time: startTime } = formatDateTime(data.startTime);
     const { date: endDate, time: endTime } = formatDateTime(endDateIso);
+
     await mutateAsync({
       startDate,
       endDate,
@@ -223,13 +237,29 @@ export default function NewSleep() {
   }, [isSuccess]);
 
   // Update clock
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setElapsedTime((prev) => prev + 1);
-    }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => {
+    const updateElapsedTime = () => {
+      const now = new Date();
+      const start = new Date(data.startTime);
+      const elapsedSeconds = Math.floor((now.getTime() - start.getTime()) / 1000);
+
+      const hours = Math.floor(elapsedSeconds / 3600);
+      const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+      const secs = elapsedSeconds % 60;
+
+      setElapsedTime(
+        `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+      );
+    };
+
+    updateElapsedTime(); // Update pertama kali
+    const interval = setInterval(updateElapsedTime, 1000); // Update tiap 1 detik
+
+    return () => clearInterval(interval); // Cleanup saat unmount
+  }, [data.startTime]);
 
   useEffect(() => {
     
@@ -310,7 +340,7 @@ export default function NewSleep() {
           <div>
             <div className="text-sm text-foreground/60">Elapsed Time</div>
             <div className="text-xl font-semibold">
-              {formatElapsedTime(elapsedTime)}
+              {elapsedTime}
             </div>
           </div>
         </motion.div>

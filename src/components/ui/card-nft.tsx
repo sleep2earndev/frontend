@@ -151,7 +151,7 @@ export default function CardNft({
                 "opacity-30": !price,
               })}
             >
-              {price ? `${price} ETH` : "Not listed"}
+              {price ? `${price} MON` : "Not listed"}
             </Badge>
           </div>
           <Button className="w-full mt-6">Close</Button>
@@ -186,7 +186,7 @@ export default function CardNft({
               "opacity-30": !price,
             })}
           >
-            {price ? `${price} ETH` : "Not listed"}
+            {price ? `${price} MON` : "Not listed"}
           </Badge>
         )}
       </div>

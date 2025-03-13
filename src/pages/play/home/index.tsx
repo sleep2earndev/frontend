@@ -105,7 +105,7 @@ export default function HomePage() {
             <div className="flex-1">
               <p className="text-sm text-foreground/60">Max Earn</p>
               <p className="text-lg font-semibold">
-                {selectedNFT?.maxEarn || 0} ETH
+                {selectedNFT?.maxEarn || 0} MON
               </p>
             </div>
             <Star className="h-5 w-5 text-primary opacity-0 transition-opacity group-hover:opacity-100" />
