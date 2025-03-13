@@ -107,7 +107,7 @@ export default function NewConfirmSleep() {
           color: "text-primary",
           bgColor: "bg-primary/20",
           shadow: "shadow-neon-purple",
-          minDuration: 6 * 60, // 6 hours
+          minDuration: 1 * 60, // 6 hours
           maxDuration: 10 * 60, // 10 hours
           step: 30, // 30 minute increments
         };
