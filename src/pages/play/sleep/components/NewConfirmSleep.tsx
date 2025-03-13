@@ -140,7 +140,7 @@ export default function NewConfirmSleep() {
           color: "text-primary",
           bgColor: "bg-primary/20",
           shadow: "shadow-neon-purple",
-          minDuration: 6 * 60,
+          minDuration: 1 * 60,
           maxDuration: 10 * 60,
           step: 30,
         };
