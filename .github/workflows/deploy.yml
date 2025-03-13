@@ -54,5 +54,6 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd /deploy/napnad/frontend
+            echo "${{ secrets.ENV_FILE_NAPNAD }}" > .env
             tar -xzvf dist.tar.gz
             rm dist.tar.gz
