@@ -8,6 +8,14 @@ export function cn(...inputs: ClassValue[]) {
 export function getCurrentDate() {
   const date = new Date();
 
+  // Mendapatkan bagian tanggal dalam format ISO tanpa UTC
+  const datePart = date.toISOString().split("T")[0];
+
+  // Mendapatkan waktu dalam zona waktu lokal
+  const timePart = date
+    .toLocaleTimeString("sv-SE", { hour12: false }) // Format 24 jam
+    .replace(",", "."); // Jika ada pemisah desimal koma
+
   // Mendapatkan offset timezone dalam menit
   const timezoneOffset = -date.getTimezoneOffset();
   const offsetHours = Math.floor(timezoneOffset / 60);
@@ -19,8 +27,7 @@ export function getCurrentDate() {
     Math.abs(offsetHours)
   ).padStart(2, "0")}:${String(Math.abs(offsetMinutes)).padStart(2, "0")}`;
 
-  // Format tanggal dengan offset
-  return date.toISOString().replace("Z", formattedOffset);
+  return `${datePart}T${timePart}${formattedOffset}`;
 }
 
 export function getTimezone() {

@@ -55,7 +55,7 @@ export default function NewConfirmSleep() {
     const now = new Date();
     const endTimeDate = new Date(now.getTime() + duration * 60 * 1000);
 
-    // Format yang bisa dibaca manusia
+    // Format waktu yang bisa dibaca manusia
     const day = endTimeDate.getDate();
     const month = endTimeDate.toLocaleString("en-US", { month: "short" });
     const year = endTimeDate.getFullYear();
@@ -72,10 +72,13 @@ export default function NewConfirmSleep() {
       Math.abs(offsetHours)
     ).padStart(2, "0")}:${String(Math.abs(offsetMinutes)).padStart(2, "0")}`;
 
-    // Format raw (ISO dengan timezone offset)
-    const rawTime = `${endTimeDate
-      .toISOString()
-      .replace("Z", formattedOffset)}`;
+    // Format raw (ISO dengan timezone lokal, bukan UTC)
+    const datePart = endTimeDate.toISOString().split("T")[0]; // Ambil YYYY-MM-DD
+    const timePart = endTimeDate
+      .toLocaleTimeString("sv-SE", { hour12: false }) // Format 24 jam
+      .replace(",", "."); // Untuk menghindari format dengan koma
+
+    const rawTime = `${datePart}T${timePart}${formattedOffset}`;
 
     return {
       format: formattedTime,

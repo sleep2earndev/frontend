@@ -76,7 +76,7 @@ const formatElapsedTime = (seconds: number) => {
 };
 
 export default function NewSleep() {
-  const { setAlarm, stopAlarm, isAlarmActive } = useAlarm();
+  const { setAlarm, stopAlarm, isAlarmCalled } = useAlarm();
   const { setLoading } = useLoading();
   const { profile } = useProfile();
   const { data, setData, setStep, setChatCoach } = useSleep();
@@ -190,6 +190,7 @@ export default function NewSleep() {
   };
 
   async function handleClaim() {
+    stopAlarm();
     setLoading(true);
     const endDateIso = getCurrentDate();
     const { date: startDate, time: startTime } = formatDateTime(data.startTime);
@@ -231,6 +232,7 @@ export default function NewSleep() {
   }, []);
 
   useEffect(() => {
+    
     if (data.alarmEnabled) {
       setAlarm(data.targetEndTime);
     }
@@ -335,10 +337,9 @@ export default function NewSleep() {
         )}
         <Modal
           title=""
-          open={isAlarmActive}
+          open={isAlarmCalled}
           onOpenChange={(open: boolean) => {
             if (!open) {
-              stopAlarm();
               handleClaim();
             }
           }}
