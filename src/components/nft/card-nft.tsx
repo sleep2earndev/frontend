@@ -1,6 +1,6 @@
 import { motion, HTMLMotionProps } from "motion/react";
 import Image from "@/components/ui/image";
-import IconEthereum from "../icon/ethereum";
+
 import { useReadContract } from "wagmi";
 import abi from "@/abi/sleepnft.json";
 import { useMemo } from "react";
@@ -10,6 +10,7 @@ import LoadingDots from "../ui/loading-dots";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAttributes } from "@/api/nft";
 import { cn, convertIpfsToHttp, getAttributes } from "@/lib/utils";
+import IconMonad from "../icon/monad";
 
 export interface NftData {
   token: {
@@ -126,7 +127,7 @@ export default function CardNft({ onChoose = () => { }, ...props }: Props) {
             ) : (
               <div className="flex items-center gap-1 font-medium">
                 <div className="bg-white rounded-full p-1 border border-background">
-                  <IconEthereum className="h-4 w-4" />
+                  <IconMonad className="h-4 w-4" />
                 </div>
                 {price}
               </div>
@@ -137,7 +138,7 @@ export default function CardNft({ onChoose = () => { }, ...props }: Props) {
               <Coins className={cn("h-4 w-4", {
                 'text-gray-500': isPendingMetadata
               })} />
-              {isPendingMetadata ? <LoadingDots /> : `${maxEarn} ETH`}
+              {isPendingMetadata ? <LoadingDots /> : `${maxEarn} MON`}
             </div>
             <div className="flex items-center gap-1 text-yellow-500">
               <Zap className={cn("h-4 w-4", {

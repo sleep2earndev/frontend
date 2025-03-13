@@ -3,9 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink, useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { useProfile } from "@/hooks/account-provider";
-import IconEthereum from "@/components/icon/ethereum";
 import { useAccount, useBalance } from "wagmi";
-import { useMemo } from "react";
+import IconMonad from "../icon/monad";
 
 export default function ProfileBar() {
   const { profile } = useProfile();
@@ -15,13 +14,6 @@ export default function ProfileBar() {
   const { data, isLoading } = useBalance({
     address: address,
   })
-
-  const balance = useMemo(() => {
-    const formatted = Number(data?.value) / 10 ** (data?.decimals || 0);
-
-    const displayValue = formatted.toFixed(4);
-    return displayValue
-  }, [data])
 
   return (
     <motion.div
@@ -42,9 +34,9 @@ export default function ProfileBar() {
         })}
         role="button"
       >
-        {address ? <span className="px-1">{isLoading ? "..." : balance}</span> : <span className="px-1">Connect Now</span>}
+        {address ? <span className="px-1">{isLoading ? "..." : data?.formatted}</span> : <span className="px-1">Connect Now</span>}
         <div className="bg-white rounded-full p-1 border border-background">
-          <IconEthereum className="w-4 h-4" />
+          <IconMonad className="w-4 h-4" />
         </div>
       </NavLink>
     </motion.div>

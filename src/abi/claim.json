@@ -58,19 +58,6 @@
             {
                 "indexed": true,
                 "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            }
-        ],
-        "name": "ContractDeployed",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
                 "name": "previousOwner",
                 "type": "address"
             },
@@ -125,6 +112,11 @@
     {
         "inputs": [
             {
+                "internalType": "bool",
+                "name": "isMerged",
+                "type": "bool"
+            },
+            {
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
@@ -133,6 +125,30 @@
         "name": "claimReward",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "claims",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "isMerged",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {

@@ -150,7 +150,7 @@ export default function LeaderBoardPage() {
                 </div>
                 <p className="mt-2 text-center font-medium">{runnerUp.name}</p>
                 <div className="mt-1 text-center text-sm">
-                  <span className="text-primary">{runnerUp.ethEarned} ETH</span>
+                  <span className="text-primary">{runnerUp.ethEarned} MON</span>
                 </div>
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function LeaderBoardPage() {
                 </div>
                 <p className="mt-3 text-center text-lg font-medium">{winner.name}</p>
                 <div className="mt-1 text-center">
-                  <span className="text-lg font-semibold text-primary">{winner.ethEarned} ETH</span>
+                  <span className="text-lg font-semibold text-primary">{winner.ethEarned} MON</span>
                 </div>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function LeaderBoardPage() {
                 </div>
                 <p className="mt-2 text-center font-medium">{thirdPlace.name}</p>
                 <div className="mt-1 text-center text-sm">
-                  <span className="text-primary">{thirdPlace.ethEarned} ETH</span>
+                  <span className="text-primary">{thirdPlace.ethEarned} MON</span>
                 </div>
               </div>
             </div>
@@ -239,7 +239,7 @@ export default function LeaderBoardPage() {
                     <p className="font-medium">{entry.name}</p>
                     <div className="flex items-center gap-2 text-sm text-white/70">
                       <div className="flex items-center gap-1">
-                        <span className="text-primary">{entry.ethEarned}</span> ETH
+                        <span className="text-primary">{entry.ethEarned}</span> MON
                       </div>
                     </div>
                   </div>

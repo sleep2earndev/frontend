@@ -66,6 +66,7 @@ const formatTime = (date: Date) => {
 
 
 export default function NewSleep() {
+
   const { setAlarm, stopAlarm, isAlarmCalled } = useAlarm();
   const { setLoading } = useLoading();
   const { profile } = useProfile();
@@ -150,6 +151,10 @@ export default function NewSleep() {
       swipeRef.current?.reset?.();
       setLoading(false);
       setOpenNotifWallet(false);
+
+      if(error.message === 'insufient energy') {
+        setStep("failed");
+      }
     },
   });
 
@@ -160,7 +165,7 @@ export default function NewSleep() {
       abi,
       address: import.meta.env.VITE_ADDRESS_CLAIM,
       functionName: "claimReward",
-      args: [_weiAmount],
+      args: [true, _weiAmount],
     });
   }
 
@@ -190,6 +195,15 @@ export default function NewSleep() {
 
   async function handleClaim() {
     stopAlarm();
+    if(data.endTime) {
+      const _weiAmount = parseEther(data.earning.toFixed());
+      return writeContract({
+        abi,
+        address: import.meta.env.VITE_ADDRESS_CLAIM,
+        functionName: "claimReward",
+        args: [_weiAmount],
+      });
+    }
     setLoading(true);
     const endDateIso = getCurrentDate();
     const { date: startDate, time: startTime } = formatDateTime(data.startTime);

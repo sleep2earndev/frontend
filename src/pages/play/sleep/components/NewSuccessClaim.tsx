@@ -59,7 +59,7 @@ export default function NewSuccessClaim() {
     clearData();
   }
 
-  const formatETHForUI = (value: number) => {
+  const formatCoinForUI = (value: number) => {
     const _value = fromWeiToEth(value);
     return _value < 0.00000001
       ? "< 0.00000001" // Batas bawah tampilan UI
@@ -176,7 +176,7 @@ export default function NewSuccessClaim() {
                     Total Earned
                   </h2>
                   <div className="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary shadow-neon-purple">
-                    ETH
+                    MON
                   </div>
                 </div>
                 <div className="mb-4 flex items-center justify-center">
@@ -187,7 +187,7 @@ export default function NewSuccessClaim() {
                       transition={{ delay: 0.8, duration: 0.5 }}
                       className="text-4xl font-bold"
                     >
-                      {formatETHForUI(data?.earning)}
+                      {formatCoinForUI(data?.earning)}
                     </motion.span>
                     <motion.span
                       initial={{ scale: 0.8, opacity: 0 }}

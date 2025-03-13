@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
-import IconEthereum from "@/components/icon/ethereum";
 import Image from "@/components/ui/image";
 import { NftData } from "@/components/nft/card-nft";
 import { Navigate, useNavigate } from "react-router";
@@ -22,6 +21,7 @@ import abi from "@/abi/sleepnft.json";
 import { parseEther } from "viem";
 import { toast } from "sonner";
 import { useLoading } from "@/components/loading-provider";
+import IconMonad from "@/components/icon/monad";
 
 export default function Marketplace() {
   const [selectedNFT, setSelectedNFT] = useState<
@@ -194,7 +194,7 @@ export default function Marketplace() {
                     </div>
                     <div className="flex items-center gap-2 text-lg font-semibold text-primary">
                       <Coins className="h-5 w-5" />
-                      {selectedNFT.maxEarn} ETH
+                      {selectedNFT.maxEarn} MON
                     </div>
                   </div>
                   <div className="rounded-xl bg-muted/50 p-4 backdrop-blur-sm">
@@ -220,7 +220,7 @@ export default function Marketplace() {
                     <div className="text-sm text-foreground/60 mb-2">Price</div>
                     <div className="flex items-center gap-2 text-2xl font-bold">
                       <div className="bg-white rounded-full p-1 border border-background">
-                        <IconEthereum className="h-6 w-6" />
+                        <IconMonad className="h-6 w-6" />
                       </div>
                       {selectedNFT.price}
                     </div>
@@ -292,7 +292,7 @@ export default function Marketplace() {
                       <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-1 text-primary">
                           <Coins className="h-4 w-4" />
-                          {purchasedNFT.maxEarn} ETH
+                          {purchasedNFT.maxEarn} MON
                         </div>
                         <div className="flex items-center gap-1 text-secondary">
                           <Zap className="h-4 w-4" />
