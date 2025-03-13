@@ -14,11 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAIChat, Message } from "@/api/ai";
 import { formatTimestamp } from "@/lib/utils";
-import Markdown from 'react-markdown'
+import Markdown from "react-markdown";
 import { useSleep } from "@/hooks/sleep-provider";
 import { useMutation } from "@tanstack/react-query";
-
-
+import { useNavigate } from "react-router";
+import useLeaveConfirmation from "@/hooks/use-leave-confirmation";
 
 // Ubah definisi komponen untuk menerima props
 export default function ChatWithAi() {
@@ -40,9 +40,15 @@ export default function ChatWithAi() {
     },
   };
 
-  const {chatCoach, setChatCoach, data} = useSleep()
+  const navigate = useNavigate();
 
-  const sleepData = data.sleepData
+  const { chatCoach, setChatCoach, data, setStep, clearData } = useSleep();
+
+  useLeaveConfirmation({
+    isBlocked: true,
+  });
+
+  const sleepData = data.sleepData;
 
   const sleepSummary = sleepData?.summary || defaultSleepData.summary;
   const efficiency = sleepData?.efficiency || defaultSleepData.efficiency;
@@ -56,13 +62,15 @@ export default function ChatWithAi() {
 
   // Fungsi untuk mendapatkan tahap tidur yang tersedia
   const getAvailableSleepStages = () => {
-    return Object.entries(sleepSummary)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([_, value]) => value && value.minutes !== undefined)
-      .map(([key, value]) => ({
-        key,
-        ...value,
-      }));
+    return (
+      Object.entries(sleepSummary)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .filter(([_, value]) => value && value.minutes !== undefined)
+        .map(([key, value]) => ({
+          key,
+          ...value,
+        }))
+    );
   };
 
   // Mendapatkan tahap tidur yang tersedia
@@ -120,8 +128,7 @@ export default function ChatWithAi() {
   };
 
   // Initial messages to show example conversation
-  
- 
+
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -129,12 +136,20 @@ export default function ChatWithAi() {
     retry: false,
     mutationFn: getAIChat,
     onSuccess(data) {
-      setChatCoach((prev) => [...prev, data]);
+      setChatCoach((prev) =>
+        [...prev, data].filter(
+          (item, index, self) =>
+            index === self.findIndex((t) => t.id === item.id)
+        )
+      );
     },
   });
 
-  const messages = chatCoach.filter((_data, index) => index === 0)
-
+  const messages = chatCoach
+    .filter((_data, index) => index !== 0)
+    .filter(
+      (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+    );
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -149,18 +164,27 @@ export default function ChatWithAi() {
       id: Date.now().toString(),
       content: content.trim(),
       role: "user",
-      timestamp: Math.floor(Date.now()/1000),
+      timestamp: Math.floor(Date.now() / 1000),
     };
 
-    setChatCoach((prev) => {
-      const newChat = [...prev, userMessage]
-      mutate(newChat)
-      return newChat
-    });
+    const newChat = [...chatCoach, userMessage];
+
+    setChatCoach(newChat);
+
+    mutate(
+      newChat.map((item) => ({
+        role: item.role,
+        content: item.content,
+      }))
+    );
     setInputValue("");
-    
   };
 
+  function backToHomepage() {
+    navigate("/play", { replace: true });
+    setStep("choose-category");
+    clearData();
+  }
 
   return (
     <div className="flex min-h-screen fixed z-20 inset-0 flex-col bg-background text-foreground">
@@ -168,7 +192,12 @@ export default function ChatWithAi() {
       <header className="sticky top-0 z-10 border-b border-foreground/10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={backToHomepage}
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2">
@@ -281,10 +310,7 @@ export default function ChatWithAi() {
                   </div>
                 )}
                 <div className="whitespace-pre-line text-sm prose">
-                  
-                  <Markdown>
-                  {message.content}
-                  </Markdown>
+                  <Markdown>{message.content}</Markdown>
                 </div>
                 <div className="mt-1 text-right text-xs text-foreground/40">
                   {formatTimestamp(message.timestamp as number)}

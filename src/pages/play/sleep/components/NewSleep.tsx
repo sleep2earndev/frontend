@@ -201,7 +201,7 @@ export default function NewSleep() {
         abi,
         address: import.meta.env.VITE_ADDRESS_CLAIM,
         functionName: "claimReward",
-        args: [_weiAmount],
+        args: [true, _weiAmount],
       });
     }
     setLoading(true);
